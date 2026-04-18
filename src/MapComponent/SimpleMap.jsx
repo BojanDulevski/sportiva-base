@@ -31,7 +31,8 @@ const ModernMap = ({ costumStyle }) => {
       <MapContainer
         center={prilepCenter}
         zoom={13}
-        zoomControl={false} // Го тргаме за почист изглед
+        zoomControl={false}
+        attributionControl={false}
         style={{
           height: "350px",
           width: "350px",
