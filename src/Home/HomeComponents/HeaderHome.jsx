@@ -1,8 +1,17 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import SimpleMap from "../../MapComponent/SimpleMap";
 
 export default function HeaderHome() {
+  const [activities, setActivities] = useState([]);
+
+  useEffect(() => {
+    fetch("http://127.0.0.1:8000/api/activities/")
+      .then((response) => response.json())
+      .then((data) => setActivities(data))
+      .catch((err) => console.error(err));
+  }, []);
+
   return (
     <header class="header">
       <div className="header-left">
@@ -39,7 +48,7 @@ export default function HeaderHome() {
           <div class="stats-compact-container">
             <div class="stat-card wide">
               <div class="card-inner">
-                <span class="stat-number">150+</span>
+                <span class="stat-number">{activities.length}</span>
                 <span class="stat-label">Active Fitness Opportunities</span>
               </div>
             </div>
@@ -47,20 +56,20 @@ export default function HeaderHome() {
             <div class="stats-grid">
               <div class="stat-card">
                 <div class="card-inner">
-                  <span class="stat-number">45</span>
+                  <span class="stat-number">{activities.filter((a) => a.activity_type === "gym").length}</span>
                   <span class="stat-label">Gyms</span>
                 </div>
               </div>
               <div class="stat-card">
                 <div class="card-inner">
-                  <span class="stat-number">20</span>
+                  <span class="stat-number">{activities.filter((a) => a.activity_type === "boxing").length}</span>
                   <span class="stat-label">Boxing</span>
                 </div>
               </div>
 
               <div class="stat-card">
                 <div class="card-inner">
-                  <span class="stat-number">35</span>
+                  <span class="stat-number">{activities.filter((a) => a.activity_type === "hall").length}</span>
                   <span class="stat-label">Halls</span>
                 </div>
               </div>

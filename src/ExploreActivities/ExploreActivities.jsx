@@ -1,94 +1,110 @@
-import React from "react";
 import "./ExploreActivities.css";
 import SimpleMap from "../MapComponent/SimpleMap";
+import React, { useState, useEffect } from "react"; 
+import { useLocation } from "react-router-dom"; // Увези useLocation
 
 export default function ExploreActivities() {
+  const [activities, setActivities] = useState([]);
+  const location = useLocation(); // Овозможува пристап до URL-то 
+  const [selectedCategory, setSelectedCategory] = useState(() => {
+    const params = new URLSearchParams(location.search);
+    return params.get("category") || "All";
+  });
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const cat = params.get("category");
+    if (cat) {
+      setSelectedCategory(cat);
+    }
+  }, [location.search]);
+
+  useEffect(() => {
+    fetch("http://127.0.0.1:8000/api/activities/")
+      .then((response) => response.json())
+      .then((data) => setActivities(data))
+      .catch((err) => console.error(err));
+  }, []);
+
+  const filteredActivities =
+    selectedCategory === "All"
+      ? activities
+      : activities.filter(
+          (activity) => activity.activity_type === selectedCategory,
+        );
+
   return (
     <>
       <div className="explore-container">
-        <div class="platform-container">
-          <header class="filter-section">
-            <h3 class="section-title">Explore Activities</h3>
-            <div class="filter-bar">
-              <button class="filter-chip active">All</button>
-              <button class="filter-chip">Gyms</button>
-              <button class="filter-chip">Boxing</button>
-              <button class="filter-chip">Sports Halls</button>
+        <div className="platform-container">
+          <header className="filter-section">
+            <h3 className="section-title">Explore Activities</h3>
+            <div className="filter-bar">
+              <button
+                className={`filter-chip set ${selectedCategory === "All" ? "active" : ""}`}
+                onClick={() => setSelectedCategory("All")}
+              >
+                All
+              </button>
+              <button
+                className={`filter-chip ${selectedCategory === "gym" ? "active" : ""}`}
+                onClick={() => setSelectedCategory("gym")}
+              >
+                Gyms
+              </button>
+              <button
+                className={`filter-chip ${selectedCategory === "boxing" ? "active" : ""}`}
+                onClick={() => setSelectedCategory("boxing")}
+              >
+                Boxing
+              </button>
+              <button
+                className={`filter-chip ${selectedCategory === "sports-halls" ? "active" : ""}`}
+                onClick={() => setSelectedCategory("sports-halls")}
+              >
+                Sports Halls
+              </button>
             </div>
           </header>
 
-          <div class="activities-grid">
-            <div class="activity-card">
-              <div class="card-image">
-                <img></img>{" "}
-              </div>
-              <div class="card-content">
-                <div class="info-top">
-                  <span class="category-tag">Gym</span>
-                  <h4 class="location-name">Arena Fitness Center</h4>
-                  <p class="address">Prilep, Center</p>
+          <div className="activities-grid">
+            {filteredActivities.map((activity) => (
+              <div key={activity.id} className="activity-card">
+                <div className="card-image">
+                  <img src={activity.image} alt={activity.name} />
                 </div>
-                <div class="card-actions">
-                  <button class="btn btn-details">Details</button>
-                  <button class="btn btn-directions">Directions</button>
+                <div className="card-content">
+                  <div className="info-top">
+                    <span className="category-tag">
+                      {activity.activity_type}
+                    </span>
+                    <h4 className="location-name">{activity.name}</h4>
+                  </div>
+                  <div className="rating">
+                    {Array.from(
+                      { length: Math.floor(activity.average_rating) },
+                      (_, index) => (
+                        <span className="star" key={index}>
+                          ★
+                        </span>
+                      ),
+                    )}
+                    <span className="rating-text">
+                      ({activity.average_rating})
+                    </span>
+                  </div>
+                  <div className="card-actions">
+                    <button className="btn btn-details">Details</button>
+                  </div>
                 </div>
+                {/* Тука можеш да ги мапираш и достапните термини (slots) */}
               </div>
-            </div>
-             <div class="activity-card">
-              <div class="card-image">
-                <img></img>{" "}
-              </div>
-              <div class="card-content">
-                <div class="info-top">
-                  <span class="category-tag">Gym</span>
-                  <h4 class="location-name">Arena Fitness Center</h4>
-                  <p class="address">Prilep, Center</p>
-                </div>
-                <div class="card-actions">
-                  <button class="btn btn-details">Details</button>
-                  <button class="btn btn-directions">Directions</button>
-                </div>
-              </div>
-            </div>
-             <div class="activity-card">
-              <div class="card-image">
-                <img></img>{" "}
-              </div>
-              <div class="card-content">
-                <div class="info-top">
-                  <span class="category-tag">Gym</span>
-                  <h4 class="location-name">Arena Fitness Center</h4>
-                  <p class="address">Prilep, Center</p>
-                </div>
-                <div class="card-actions">
-                  <button class="btn btn-details">Details</button>
-                  <button class="btn btn-directions">Directions</button>
-                </div>
-              </div>
-            </div>
-
-            <div class="activity-card">
-              <div class="card-image">
-                <img></img>{" "}
-              </div>
-              <div class="card-content">
-                <div class="info-top">
-                  <span class="category-tag">Boxing</span>
-                  <h4 class="location-name">Spartan Boxing Club</h4>
-                  <p class="address">Prilep, Tochila</p>
-                </div>
-                <div class="card-actions">
-                  <button class="btn btn-details">Details</button>
-                  <button class="btn btn-directions">Directions</button>
-                </div>
-              </div>
-            </div>
+            ))}
           </div>
         </div>
         <div className="explore-map-container"></div>
-            <SimpleMap
-            costumStyle={{ height: "100%", width: "500px", borderRadius: "15px" }}
-            />
+        <SimpleMap
+          costumStyle={{ height: "100%", width: "500px", borderRadius: "15px" }}
+        />
       </div>
     </>
   );

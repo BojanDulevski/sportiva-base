@@ -1,11 +1,34 @@
-import React from "react";
+import React, {  useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom"; // ПРАВИЛНО
+
 
 export default function MainHome() {
+  const [activities, setActivities] = useState([]);
+  const navigate = useNavigate();
+
+  const goToGyms = () => {
+    navigate("/explore-activities", { state: { category: "Gym" } }); // Испраќаме параметар во URL
+  };
+  const goToBoxing = () => {
+    navigate("/explore-activities", { state: { category: "Boxing" } }); // Испраќаме параметар во URL
+  };
+  const goToSportsHalls = () => {
+    navigate("/explore-activities", { state: { category: "Sports Halls" } }); // Испраќаме параметар во URL
+  };
+
+
+  useEffect(() => {
+    fetch("http://127.0.0.1:8000/api/activities/")
+      .then((response) => response.json())
+      .then((data) => setActivities(data))
+      .catch((err) => console.error(err));
+  }, []);
+
   return (
     <main className="container">
       <section className="left-section">
         <div className="activiry-categories">
-          <div className="card">
+          <div onClick={goToGyms} className="card">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 45 45"
@@ -39,7 +62,7 @@ export default function MainHome() {
             </svg>
             <h2>Gyms</h2>
           </div>
-          <div className="card">
+          <div onClick={goToBoxing} className="card">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -63,7 +86,7 @@ export default function MainHome() {
             </svg>
             <h2>Boxing</h2>
           </div>
-          <div className="card">
+          <div onClick={goToSportsHalls} className="card">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -96,43 +119,37 @@ export default function MainHome() {
         </div>
         <section className="popular-gyms">
           <h2 className="section-title">Popular Gyms</h2>
+          <div className="popular-gyms-grid">
+            {activities
+              .sort((a, b) => b.average_rating - a.average_rating)
+              .slice(0, 2)
+              .map((activity) => (
+                <div className="gym-container">
+                  <div className="gym-card">
+                    <div className="gym-image">
+                      <img src={activity.image} alt={activity.name} />
+                    </div>
+                    <div className="gym-info">
+                      <h3>{activity.name}</h3>
 
-          <div className="gym-container">
-            <div className="gym-card">
-              <div className="gym-image">
-                <img src="" alt="Vardar Sport Center" />
-              </div>
-              <div className="gym-info">
-                <h3>Magnus Fitness</h3>
-                <div className="rating">
-                  <span className="star">★</span>
-                  <span className="star">★</span>
-                  <span className="star">★</span>
-                  <span className="star">★</span>
-                  <span className="star">☆</span>
-                  <span className="rating-text">(4.8)</span>
+                      <div className="rating">
+                        {Array.from(
+                          { length: Math.floor(activity.average_rating) },
+                          (_, index) => (
+                            <span className="star" key={index}>
+                              ★
+                            </span>
+                          ),
+                        )}
+                        <span className="rating-text">
+                          ({activity.average_rating})
+                        </span>
+                      </div>
+                      <button className="details-btn">Details</button>
+                    </div>
+                  </div>
                 </div>
-                <button className="details-btn">Details</button>
-              </div>
-            </div>
-
-            <div className="gym-card">
-              <div className="gym-image">
-                <img src="" alt="Vardar Sport Center" />
-              </div>
-              <div className="gym-info">
-                <h3>Vardar Sport</h3>
-                <div className="rating">
-                  <span className="star">★</span>
-                  <span className="star">★</span>
-                  <span className="star">★</span>
-                  <span className="star">★</span>
-                  <span className="star">★</span>
-                  <span className="rating-text">(5.0)</span>
-                </div>
-                <button className="details-btn">Details</button>
-              </div>
-            </div>
+              ))}
           </div>
         </section>
       </section>

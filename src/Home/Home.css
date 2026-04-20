@@ -34,11 +34,7 @@ body {
   max-width: 900px;
 }
 
-.header_map .map-wrapper:hover {
-            transform: scale(1.2);
-            transition: transform 0.6s ease;
 
-}
 
 /* Main Container */
 .container {
@@ -242,6 +238,10 @@ body {
   background-color: #f9f9f9;
   text-align: center;
 }
+.popular-gyms-grid{
+    display: flex;
+    gap: 5%;
+}
 
 .section-title {
   font-size: 2rem;
@@ -252,7 +252,7 @@ body {
 .gym-container {
   display: flex;
   justify-content: center;
-
+  width: 100%;;
   gap: 25px;
   flex-wrap: wrap; /* Za da bidat edna pod druga na mobilen */
 }
@@ -261,7 +261,6 @@ body {
   background: #fff;
   border-radius: 15px;
   overflow: hidden;
-  width: 45%;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
   transition: transform 0.3s ease;
 }

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
@@ -14,17 +14,25 @@ const neonIcon = L.divIcon({
   iconAnchor: [10, 10],
 });
 
-const fitnessCenters = [
-  { id: 1, name: "Arena Fitness Center", pos: [41.3442, 21.5515] },
-  { id: 2, name: "Fitstar Fitness", pos: [41.3465, 21.555] },
-  { id: 3, name: "Energy Fitnes", pos: [41.3418, 21.549] },
-  { id: 4, name: "Spartan Fitnes", pos: [41.3522, 21.5475] },
-  { id: 5, name: "Champion Fitness", pos: [41.348, 21.5532] },
-  { id: 6, name: "Elite Gym", pos: [41.3395, 21.5585] },
-  { id: 7, name: "FFitness", pos: [41.3458, 21.544] },
-];
-
 const ModernMap = ({ costumStyle }) => {
+  const [activities, setActivities] = useState([]);
+
+  useEffect(() => {
+    fetch("http://127.0.0.1:8000/api/activities/")
+      .then((response) => response.json())
+      .then((data) => setActivities(data))
+      .catch((err) => console.error(err));
+  }, []);
+
+  const handleDirections = (activity) => {
+    const query = encodeURIComponent(
+      ` ${activity.google_maps_address || ""}`,
+    );
+    const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${query}`;
+
+    window.open(googleMapsUrl, "_blank"); // Го отвора Google Maps во нов таб
+  };
+
   const prilepCenter = [41.3461, 21.554];
   return (
     <div className="map-wrapper">
@@ -46,13 +54,19 @@ const ModernMap = ({ costumStyle }) => {
           attribution="&copy; CARTO"
         />
 
-        {fitnessCenters.map((loc) => (
-          <Marker key={loc.id} position={loc.pos} icon={neonIcon}>
+        {activities.map((activity) => (
+          <Marker
+            key={activity.id}
+            position={JSON.parse(activity.location)}
+            icon={neonIcon}
+          >
             <Popup className="cyber-popup">
-              {loc.name}
+              {activity.name}
               <div className="popup-buttons">
-                <button className="popup-btn">Details</button>
-                <button className="popup-btn">Get Directions</button>
+                <button className="popup-btn">Show Details</button>
+                <button className="popup-btn" onClick={() => handleDirections(activity)}>
+                  Get Directions
+                </button>
               </div>
             </Popup>
           </Marker>

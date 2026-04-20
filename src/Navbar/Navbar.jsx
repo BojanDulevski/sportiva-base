@@ -11,7 +11,6 @@ function Navbar() {
       <div className="navbar-center">
         <Link to="/" className="nav-link">Home</Link>
         <Link to="explore-activities" className="nav-link">Explore Activities</Link>
-        <Link to="how" className="nav-link">How it works</Link>
       </div>
 
       <div className='navbar-login'>
