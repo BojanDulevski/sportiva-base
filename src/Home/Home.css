@@ -18,9 +18,9 @@ body {
   padding: 40px 20px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   display: flex;
-
   justify-content: space-around;
 }
+
 .header-left {
   display: flex;
   flex-direction: column;
@@ -33,8 +33,6 @@ body {
   line-height: 1.3;
   max-width: 900px;
 }
-
-
 
 /* Main Container */
 .container {
@@ -50,6 +48,7 @@ body {
   flex-direction: column;
   gap: 5%;
 }
+
 .activiry-categories {
   display: flex;
   justify-content: space-around;
@@ -61,9 +60,7 @@ body {
   border-radius: 10px;
   padding: 25px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-  transition:
-    transform 0.3s ease,
-    box-shadow 0.3s ease;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -97,7 +94,7 @@ body {
 .right-section p {
   line-height: 1.6;
   font-size: 1.1rem;
-  color: #e0e0e0; /* Light gray for readability */
+  color: #e0e0e0;
 }
 
 .stats-list {
@@ -110,13 +107,13 @@ body {
   background: rgba(255, 255, 255, 0.05);
   margin-bottom: 12px;
   padding: 15px;
-  border-left: 4px solid #00d2ff; /* Vibrant accent line */
+  border-left: 4px solid #00d2ff;
   border-radius: 8px;
   font-size: 1.05rem;
 }
 
 .stats-list li strong {
-  color: #00d2ff; /* Highlight color for numbers */
+  color: #00d2ff;
   font-size: 1.25rem;
   margin-right: 5px;
 }
@@ -125,7 +122,7 @@ body {
   margin-top: 25px;
   padding: 15px;
   border-radius: 12px;
-  background: rgba(0, 210, 255, 0.1); /* Subtle highlight box */
+  background: rgba(0, 210, 255, 0.1);
   border: 1px dashed rgba(0, 210, 255, 0.3);
 }
 
@@ -133,6 +130,7 @@ body {
   color: #fff;
   text-decoration: underline;
 }
+
 /* Footer */
 .footer {
   background: #2c3e50;
@@ -163,27 +161,25 @@ body {
   border-right: none;
 }
 
-
-/* searchBox */
+/* Search Box */
 .search-container {
   display: flex;
   align-items: center;
   justify-content: space-around;
-  
 }
 
 .search-box {
   position: relative;
   display: flex;
   align-items: center;
-  background: var(--glass-bg);
+  background: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(12px);
   border: 2px solid rgba(255, 255, 255, 0.2);
   border-radius: 12px;
   padding: 8px 18px;
   transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   width: 320px;
-  height: 20%;
+  height: 50px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
 }
 
@@ -194,10 +190,8 @@ body {
 
 .search-box:focus-within {
   width: 450px;
-  border-color: var(--neon-blue);
-  box-shadow:
-    0 0 20px rgba(0, 242, 255, 0.4),
-    inset 0 0 10px rgba(0, 242, 255, 0.1);
+  border-color: #00d2ff;
+  box-shadow: 0 0 20px rgba(0, 242, 255, 0.4), inset 0 0 10px rgba(0, 242, 255, 0.1);
 }
 
 .search-input {
@@ -219,7 +213,7 @@ body {
 .search-btn {
   background: transparent;
   border: none;
-  color: var(--neon-blue);
+  color: #00d2ff;
   cursor: pointer;
   padding-left: 12px;
   display: flex;
@@ -231,16 +225,17 @@ body {
   transform: scale(1.3);
 }
 
-/* popular gyms section */
+/* Popular Gyms Section - FIXED FOR ALIGNMENT */
 .popular-gyms {
   padding: 50px 20px;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   background-color: #f9f9f9;
   text-align: center;
 }
-.popular-gyms-grid{
-    display: flex;
-    gap: 5%;
+
+.popular-gyms-grid {
+  display: flex;
+  gap: 5%;
 }
 
 .section-title {
@@ -252,9 +247,9 @@ body {
 .gym-container {
   display: flex;
   justify-content: center;
-  width: 100%;;
+  width: 100%;
   gap: 25px;
-  flex-wrap: wrap; /* Za da bidat edna pod druga na mobilen */
+  flex-wrap: wrap;
 }
 
 .gym-card {
@@ -263,6 +258,11 @@ body {
   overflow: hidden;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
   transition: transform 0.3s ease;
+  
+  /* Овозможува сите картички да имаат иста висина во ред */
+  display: flex;
+  flex-direction: column;
+  width: 300px; 
 }
 
 .gym-card:hover {
@@ -272,22 +272,30 @@ body {
 .gym-image img {
   width: 100%;
   height: 200px;
-  object-fit: cover;
+  object-fit: cover; /* Спречува издолжување на сликите */
 }
 
 .gym-info {
   padding: 20px;
   text-align: left;
+  
+  /* Ова го прави инфо делот флексибилен за да го турне копчето долу */
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1; 
 }
 
 .gym-info h3 {
   margin: 0 0 10px 0;
   color: #222;
+  font-size: 1.25rem;
 }
 
 .rating {
-  margin-bottom: 20px;
-  color: #ffb400; /* Zlatna boja za dzvezdickite */
+  margin-bottom: 15px;
+  color: #ffb400;
+  /* Ова осигурува дека рејтингот и копчето секогаш ќе бидат на дното */
+  margin-top: auto; 
 }
 
 .rating-text {
@@ -306,87 +314,83 @@ body {
   cursor: pointer;
   font-weight: 600;
   transition: background 0.3s;
+  margin-top: 10px;
 }
 
 .details-btn:hover {
   background-color: #333;
 }
 
-/* popup baloons */
-
+/* Stats Balloons */
 .stats-compact-container {
-    
-    display: flex;
-    flex-direction: column;
-    gap: 8px; /* Мал простор помеѓу елементите */
-    font-family: 'Inter', system-ui, sans-serif;
-  }
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-family: 'Inter', system-ui, sans-serif;
+}
 
-  .stats-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr; /* Две во ред */
-    gap: 8px;
-  }
+.stats-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
 
-  .stat-card {
-    background: #ffffff;
-    border: 1px solid #e5e7eb;
-    border-radius: 12px;
-    padding: 15px 10px;
-    text-align: center;
-    transition: all 0.3s ease;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-  }
+.stat-card {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 15px 10px;
+  text-align: center;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
 
-  /* Стил за „Wide“ картичката (Offers) */
-  .stat-card.wide {
-    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-    color: white;
-    border: none;
-  }
+.stat-card.wide {
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+  color: white;
+  border: none;
+}
 
-  .stat-card.wide .stat-number {
-    font-size: 1.8rem;
-    color: #38bdf8; /* Светло сина за акцент */
-  }
+.stat-card.wide .stat-number {
+  font-size: 1.8rem;
+  color: #38bdf8;
+}
 
-  .stat-card.wide .stat-label {
-    color: #94a3b8;
-  }
+.stat-card.wide .stat-label {
+  color: #94a3b8;
+}
 
-  /* Стил за картичката со корисници (Highlight) */
-  .stat-card.highlight {
-    background: #f0fdf4;
-    border-color: #bbf7d0;
-  }
+.stat-card.highlight {
+  background: #f0fdf4;
+  border-color: #bbf7d0;
+}
 
-  .stat-card.highlight .stat-number {
-    color: #166534;
-  }
+.stat-card.highlight .stat-number {
+  color: #166534;
+}
 
-  .stat-number {
-    display: block;
-    font-size: 1.4rem;
-    font-weight: 800;
-    line-height: 1;
-    margin-bottom: 4px;
-    color: #111827;
-  }
+.stat-number {
+  display: block;
+  font-size: 1.4rem;
+  font-weight: 800;
+  line-height: 1;
+  margin-bottom: 4px;
+  color: #111827;
+}
 
-  .stat-label {
-    display: block;
-    font-size: 0.7rem;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: #6b7280;
-    font-weight: 600;
-  }
+.stat-label {
+  display: block;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #6b7280;
+  font-weight: 600;
+}
 
-  /* Hover ефект */
-  .stat-card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
-  }
+.stat-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
+}
 
 /* Responsive Design */
 @media (max-width: 768px) {
@@ -414,7 +418,8 @@ body {
   .sponsor:last-child {
     border-bottom: none;
   }
-  .stats-compact-container {
-      width: 90%; /* На мобилен заземи повеќе простор */
-    }
+
+  .gym-card {
+    width: 100%; /* Картичките го заземаат целиот екран на мобилен */
+  }
 }
