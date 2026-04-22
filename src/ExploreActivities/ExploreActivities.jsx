@@ -58,8 +58,8 @@ export default function ExploreActivities() {
                 Boxing
               </button>
               <button
-                className={`filter-chip ${selectedCategory === "sports-halls" ? "active" : ""}`}
-                onClick={() => setSelectedCategory("sports-halls")}
+                className={`filter-chip ${selectedCategory === "sports_hall" ? "active" : ""}`}
+                onClick={() => setSelectedCategory("sports_hall")}
               >
                 Sports Halls
               </button>
@@ -106,6 +106,6 @@ export default function ExploreActivities() {
           costumStyle={{ height: "100%", width: "500px", borderRadius: "15px" }}
         />
       </div>
-    </>
+    </> 
   );
 }
