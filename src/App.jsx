@@ -2,6 +2,7 @@ import "./App.css";
 import ExploreActivities from "./ExploreActivities/ExploreActivities";
 import Home from "./Home/Home";
 import Navbar from "./Navbar/Navbar";
+import ActivityDetails from './ActivityDetails/ActivityDetails';
 import { Routes, Route } from "react-router";
 
 function App() {
@@ -11,6 +12,7 @@ function App() {
       <Routes>
         <Route index element={<Home />} />
         <Route path="/explore-activities" element={<ExploreActivities />} />
+        <Route path="/details/:id" element={<ActivityDetails />} />
       </Routes>
     </>
   );

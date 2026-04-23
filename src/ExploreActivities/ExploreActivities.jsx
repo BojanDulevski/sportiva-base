@@ -1,15 +1,16 @@
 import "./ExploreActivities.css";
 import SimpleMap from "../MapComponent/SimpleMap";
 import React, { useState, useEffect } from "react"; 
-import { useLocation } from "react-router-dom"; // Увези useLocation
+import { useLocation, Link } from "react-router-dom"; // Додаден Link
 
 export default function ExploreActivities() {
   const [activities, setActivities] = useState([]);
-  const location = useLocation(); // Овозможува пристап до URL-то 
+  const location = useLocation(); 
   const [selectedCategory, setSelectedCategory] = useState(() => {
     const params = new URLSearchParams(location.search);
     return params.get("category") || "All";
   });
+
   useEffect(() => {
     const params = new URLSearchParams(location.search);
     const cat = params.get("category");
@@ -93,10 +94,12 @@ export default function ExploreActivities() {
                     </span>
                   </div>
                   <div className="card-actions">
-                    <button className="btn btn-details">Details</button>
+                    {/* ПРОМЕНЕТО: Сега води кон рутата за детали со точното ID */}
+                    <Link to={`/details/${activity.id}`} className="btn btn-details">
+                        Details
+                    </Link>
                   </div>
                 </div>
-                {/* Тука можеш да ги мапираш и достапните термини (slots) */}
               </div>
             ))}
           </div>
