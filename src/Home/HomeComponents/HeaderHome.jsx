@@ -69,7 +69,7 @@ export default function HeaderHome() {
 
               <div class="stat-card">
                 <div class="card-inner">
-                  <span class="stat-number">{activities.filter((a) => a.activity_type === "hall").length}</span>
+                  <span class="stat-number">{activities.filter((a) => a.activity_type === "sports_hall").length}</span>
                   <span class="stat-label">Halls</span>
                 </div>
               </div>
