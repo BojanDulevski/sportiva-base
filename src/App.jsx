@@ -3,7 +3,8 @@ import ExploreActivities from "./ExploreActivities/ExploreActivities";
 import Home from "./Home/Home";
 import Navbar from "./Navbar/Navbar";
 import ActivityDetails from './ActivityDetails/ActivityDetails';
-import Signup from "./Signup/Signup";
+import Signup from './Authentications/SignUp';
+import Login from './Authentications/Login';
 import { Routes, Route } from "react-router";
 
 function App() {
@@ -14,6 +15,7 @@ function App() {
         <Route index element={<Home />} />
         <Route path="/explore-activities" element={<ExploreActivities />} />
         <Route path="/signup" element={<Signup />} />
+        <Route path="/login" element={<Login />} />
         <Route path="/details/:id" element={<ActivityDetails />} />
       </Routes>
     </>
