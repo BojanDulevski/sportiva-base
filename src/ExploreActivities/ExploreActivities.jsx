@@ -5,6 +5,7 @@ import { useLocation, useNavigate, Link } from "react-router-dom"; // Додад
 
 export default function ExploreActivities() {
   const [activities, setActivities] = useState([]);
+  const [activityTypes, setActivityTypes] = useState([]);
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -14,30 +15,31 @@ export default function ExploreActivities() {
   });
 
   const handleCategoryChange = (category) => {
+    setSelectedCategory(category)
     navigate(`?category=${category}`);
   };
 
   useEffect(() => {
-    const params = new URLSearchParams(location.search);
-    const cat = params.get("category");
-    if (cat) {
-      setSelectedCategory(cat);
-    }
-  }, [location.search]);
+  const params = new URLSearchParams(location.search);
+  const cat = params.get("category")
+  setSelectedCategory(cat);
+  setActivityTypes(cat); 
+}, [location.search]);
 
   useEffect(() => {
     fetch("http://127.0.0.1:8000/api/activities/")
       .then((response) => response.json())
-      .then((data) => setActivities(data))
+      .then((data) => {
+        setActivities(data);
+      })
       .catch((err) => console.error(err));
   }, []);
 
-  const filteredActivities =
-    selectedCategory === "All"
-      ? activities
-      : activities.filter(
-          (activity) => activity.activity_type === selectedCategory,
-        );
+  const filteredActivities = (activities || []).filter((activity) => {
+    if (!activity) return false;
+    if (selectedCategory === "All") return true;
+    return activity.activity_type === selectedCategory;
+  });
 
   return (
     <>
@@ -115,7 +117,7 @@ export default function ExploreActivities() {
         </div>
         <div className="explore-map-container"></div>
         <SimpleMap
-          costumStyle={{ height: "100%", width: "500px", borderRadius: "15px" }}
+          costumStyle={{ height: "100%", width: "500px", borderRadius: "15px" } } activityType={activityTypes} 
         />
       </div>
     </>

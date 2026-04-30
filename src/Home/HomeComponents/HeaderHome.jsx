@@ -91,7 +91,7 @@ export default function HeaderHome() {
       </div>
 
       <div className="header_map">
-        <SimpleMap />
+        <SimpleMap activityType="All" />
       </div>
     </header>
   );

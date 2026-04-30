@@ -15,7 +15,7 @@ const neonIcon = L.divIcon({
   iconAnchor: [10, 10],
 });
 
-const ModernMap = ({ costumStyle, detailsActivity }) => {
+const ModernMap = ({ costumStyle, detailsActivity, activityType }) => {
   const [activities, setActivities] = useState([]);
 
   useEffect(() => {
@@ -35,6 +35,11 @@ const ModernMap = ({ costumStyle, detailsActivity }) => {
   };
 
   const prilepCenter = [41.3461, 21.554];
+  const displayedActivities =
+    activityType !== "All"
+      ? activities.filter((act) => act.activity_type === activityType)
+      : activities;
+
   return (
     <div className="map-wrapper">
       <MapContainer
@@ -70,7 +75,7 @@ const ModernMap = ({ costumStyle, detailsActivity }) => {
             </Popup>
           </Marker>
         ) : (
-          activities.map((activity) => (
+          displayedActivities.map((activity) => (
             <Marker
               key={activity.id}
               position={JSON.parse(activity.location)}
