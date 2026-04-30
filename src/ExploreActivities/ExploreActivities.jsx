@@ -21,7 +21,7 @@ export default function ExploreActivities() {
 
   useEffect(() => {
   const params = new URLSearchParams(location.search);
-  const cat = params.get("category")
+  const cat = params.get("category")|| "All";
   setSelectedCategory(cat);
   setActivityTypes(cat); 
 }, [location.search]);
