@@ -1,10 +1,23 @@
 import React, { useState, useEffect } from "react";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import { useNavigate } from "react-router-dom"; // ПРАВИЛНО
+
 import SimpleMap from "../../MapComponent/SimpleMap";
 
 export default function HeaderHome() {
   const [activities, setActivities] = useState([]);
+  const [searchValue,setSearchValue] = useState("");
+  const navigate = useNavigate();
+  
   const [users, setUsers] = useState(0);
+ const navigateToActivity = () => {
+    activities.map((activity) =>{
+      if(activity.name.toLowerCase().includes(searchValue.toLowerCase())) {
+        navigate(`/details/${activity.id}`);
+      }
+    });
+  };
+
 
   useEffect(() => {
     fetch("http://127.0.0.1:8000/api/activities/")
@@ -32,8 +45,9 @@ export default function HeaderHome() {
               type="text"
               class="search-input"
               placeholder="Search for gyms, boxing clubs and sports centres..."
+              onChange={(e) => setSearchValue(e.target.value)}
             />
-            <button class="search-btn">
+            <button class="search-btn" onClick={() => navigateToActivity()}>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="20"
