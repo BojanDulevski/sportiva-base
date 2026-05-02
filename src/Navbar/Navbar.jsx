@@ -5,26 +5,27 @@ import logo from '../assets/logo.png';
 
 function Navbar() {
   const [username, setUsername] = useState(null);
+  const [showHi, setShowHi] = useState(true);
   const navigate = useNavigate();
 
-  
   useEffect(() => {
     const storedUser = localStorage.getItem('username');
     if (storedUser) {
       setUsername(storedUser);
     }
+
+    const timer = setTimeout(() => {
+      setShowHi(false);
+    }, 10000);
+
+    return () => clearTimeout(timer);
   }, []);
 
   const handleLogout = () => {
-    
     localStorage.removeItem('token');
     localStorage.removeItem('username');
-    
-    
     setUsername(null);
     navigate('/');
-    
-    
     window.location.reload();
   };
 
@@ -44,17 +45,16 @@ function Navbar() {
 
       <div className='navbar-auth'>
         {username ? (
-          
           <div className="user-profile-nav">
             <span className="user-name-display">
-               Hi, 👋 <strong>{username}</strong>
+              {showHi && "Hi, 👋 "}
+              <strong>{username}</strong>
             </span>
             <button onClick={handleLogout} className="logout-btn">
               Logout
             </button>
           </div>
         ) : (
-         
           <>
             <Link to="/login" className="nav-link login-btn">Login</Link>
             <Link to="/signup" className="signup-btn">Sign Up</Link>
