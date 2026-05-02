@@ -31,6 +31,7 @@ function Login() {
         localStorage.setItem('username', data.username);
         alert("Login successful!");
         navigate('/'); 
+        window.location.reload(); 
       } else {
         setError(data.non_field_errors || "Invalid username or password.");
       }

@@ -10,7 +10,7 @@
   z-index: 1000;
 }
 
-/* Logo секција */
+
 .navbar-logo {
   display: flex;
   align-items: center;
@@ -54,29 +54,56 @@
   color: #4a3aff;
 }
 
-/* Auth копчиња (Login/Signup) */
 .navbar-auth {
   display: flex;
   align-items: center;
   gap: 20px;
 }
 
-.signup-btn {
-  background-color: #4a3aff; /* Виолетова боја како на Hero секцијата */
+
+.user-profile-nav {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.user-name-display {
+  font-size: 15px;
+  font-weight: 600;
+  color: #444;
+}
+
+.user-name-display strong {
+  color: #4a3aff; 
+}
+
+.logout-btn, .signup-btn {
+  background-color: #4a3aff;
   color: white;
   padding: 10px 22px;
-  border-radius: 8px;
+  border-radius: 8px; 
   text-decoration: none;
   font-weight: 600;
-  transition: background 0.3s ease;
+  font-size: 15px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.signup-btn:hover {
+.logout-btn:hover, .signup-btn:hover {
   background-color: #3729d1;
   box-shadow: 0 4px 12px rgba(74, 58, 255, 0.3);
+  transform: translateY(-1px);
 }
 
-/* Responsive */
+.login-btn {
+  margin-right: 5px;
+}
+
+
 @media (max-width: 768px) {
   .navbar {
     padding: 15px 20px;
@@ -84,9 +111,13 @@
   }
   
   .navbar-center {
-    order: 3; /* Ги става линковите долу на мобилен */
+    order: 3; 
     width: 100%;
     margin-top: 15px;
     gap: 15px;
+  }
+
+  .navbar-auth {
+    gap: 10px;
   }
 }
