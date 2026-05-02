@@ -15,7 +15,7 @@
     system-ui,
     -apple-system,
     sans-serif;
-  height: calc(100vh - 66px);
+  height: calc(100vh - 60px);
   display: flex;
   gap: 1%;
   justify-content: space-between;

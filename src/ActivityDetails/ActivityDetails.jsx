@@ -9,7 +9,6 @@ const ActivityDetails = ({ activities }) => {
   const [loading, setLoading] = useState(true);
   const [currentImg, setCurrentImg] = useState(0);
 
-  const BACKEND_URL = "http://127.0.0.1:8000";
 
   const [selectedDate, setSelectedDate] = useState(new Date());
 
@@ -27,10 +26,9 @@ const ActivityDetails = ({ activities }) => {
 
   useEffect(() => {
     if (activities && activities.length > 0) {
-      // Го наоѓаме објектот што одговара на ID-то од URL-то
-      // Внимавај: id од useParams е string, па го правиме Number
+     
       const foundActivity = activities.find((a) => String(a.id) === String(id));
-      
+
       if (foundActivity) {
         setActivity(foundActivity);
       }
@@ -61,7 +59,7 @@ const ActivityDetails = ({ activities }) => {
 
   return (
     <div className="details-wrapper">
-      <div className="container">
+      <div className="details-container">
         {/* Navigation Bar */}
         <nav className="details-nav">
           <Link to="/explore-activities" className="back-btn">
@@ -164,7 +162,9 @@ const ActivityDetails = ({ activities }) => {
           </div>
 
           {/* RIGHT SIDE - Map & Booking */}
-          <div className="glass-card map-card">
+          
+        </div>
+        <div className="glass-card map-card">
             <div className="map-container-styled">
               <SimpleMap activities={[activity]} detailsActivity={activity} />
             </div>
@@ -183,12 +183,19 @@ const ActivityDetails = ({ activities }) => {
                         {review?.user_name.charAt(0).toUpperCase()}
                       </div>
                       <div className="user-details">
-                        <span className="username">{review.user_name.charAt(0).toUpperCase() + review.user_name.slice(1)}</span>
+                        <span className="username">
+                          {review.user_name.charAt(0).toUpperCase() +
+                            review.user_name.slice(1)}
+                        </span>
                       </div>
                     </div>
                     <div className="rating">
-                      {Array.from({ length: Math.round(review.rating || 5) }).map((_, i) => (
-                        <span key={i} className="star">★</span>
+                      {Array.from({
+                        length: Math.round(review.rating || 5),
+                      }).map((_, i) => (
+                        <span key={i} className="star">
+                          ★
+                        </span>
                       ))}
                     </div>
                   </div>
@@ -201,9 +208,8 @@ const ActivityDetails = ({ activities }) => {
                 </div>
               ))}
             </div>
-            
           </div>
-        </div>
+
       </div>
     </div>
   );
