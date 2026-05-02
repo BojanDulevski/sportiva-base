@@ -27,7 +27,7 @@ a:active {
   max-width: 1300px;
   min-height: 100vh;
   margin: 0 auto;
-  padding: 20px;
+  padding: 20px 0;
 }
 .day-selector {
   display: flex;

@@ -145,7 +145,7 @@ export default function MainHome() {
                           ({activity.reviews_count})
                         </span>
                       </div>
-                      <button className="details-btn">Details</button>
+                      <button className="details-btn" onClick={()=>{navigate(`/details/${activity.id}`);}}>Details</button>
                     </div>
                   </div>
                 </div>
