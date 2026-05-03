@@ -1,14 +1,17 @@
 import React, { useState, useEffect } from "react";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
-import { useNavigate } from "react-router-dom"; //
+import { useNavigate } from "react-router-dom"; 
 
 import SimpleMap from "../../MapComponent/SimpleMap";
 
 export default function HeaderHome({activities}) {
   const [searchValue, setSearchValue] = useState("");
   const navigate = useNavigate();
-
   const [users, setUsers] = useState(0);
+
+  
+  const username = localStorage.getItem("username");
+
   const navigateToActivity = () => {
     activities.map((activity) => {
       if (activity.name.toLowerCase().includes(searchValue.toLowerCase())) {
@@ -16,6 +19,7 @@ export default function HeaderHome({activities}) {
       }
     });
   };
+
   const handleKeyDown = (event) => {
     if (event.key === "Enter") {
       navigateToActivity();  
@@ -33,7 +37,7 @@ export default function HeaderHome({activities}) {
     <header className="header">
       <div className="header-left">
         <h1>
-          Hey there! If you're on the hunt for the best fitness activities in
+          Hey {username ? username : "there"}! If you're on the hunt for the best fitness activities in
           Prilep, look no further. You've officially found your new home for
           health!
         </h1>
@@ -48,7 +52,6 @@ export default function HeaderHome({activities}) {
             />
             <button
               className="search-btn"
-              onKeyDown={handleKeyDown}
               onClick={() => navigateToActivity()}
             >
               <svg
@@ -58,8 +61,8 @@ export default function HeaderHome({activities}) {
                 fill="none"
                 stroke="currentColor"
                 strokeWidth="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
+                strokeLinecap="round"
+                strokeLinejoin="round"
                 className="feather feather-search"
               >
                 <circle cx="11" cy="11" r="8"></circle>
