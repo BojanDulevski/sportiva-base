@@ -1,0 +1,72 @@
+/* Global responsive overrides — keep DOM order, stack sections on smaller screens */
+
+:root{
+	--responsive-gap: 1rem;
+}
+
+/* Ensure main explore layout stacks on narrower viewports without changing DOM order */
+.explore-container{
+	box-sizing: border-box;
+}
+
+@media (max-width: 1024px){
+	.explore-container{
+		flex-direction: column;
+		align-items: stretch;
+		height: auto !important;
+		padding: 1rem;
+		gap: var(--responsive-gap);
+	}
+
+	.platform-container{
+		width: 100% !important;
+		max-height: none !important;
+		height: auto !important;
+		padding: 1rem !important;
+	}
+
+	.explore-map-container{
+		width: 100% !important;
+		order: 2; /* keep platform listed first in the DOM order */
+	}
+
+	.explore-map-container .map-wrapper{
+		height: 400px !important;
+	}
+
+	.activities-grid,
+	.activities-grid-my-reviews{
+		grid-template-columns: 1fr !important;
+		max-width: 100% !important;
+		margin: 0 auto !important;
+		display: grid !important;
+		gap: 1rem !important;
+	}
+
+	.activity-card{
+		flex-direction: column !important;
+		height: auto !important;
+	}
+
+	.card-image{
+		width: 100% !important;
+		min-width: unset !important;
+		height: 180px !important;
+	}
+
+	.card-content{
+		padding: 12px !important;
+	}
+
+	.filter-section{ text-align: left !important; }
+	.filter-bar{ justify-content: flex-start !important; }
+}
+
+@media (max-width: 480px){
+	.explore-container{ padding: 0.75rem !important; }
+	.platform-container{ padding: 0.75rem !important; }
+	.section-title{ font-size: 1.25rem !important; }
+	.card-image{ height: 120px !important; }
+	.filter-chip{ padding: 6px 12px !important; font-size: 0.85rem !important; }
+	.btn{ padding: 8px !important; font-size: 0.75rem !important; }
+}

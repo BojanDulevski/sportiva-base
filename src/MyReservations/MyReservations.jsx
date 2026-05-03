@@ -1,12 +1,13 @@
 import SimpleMap from "../MapComponent/SimpleMap";
 import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate, Link } from "react-router-dom";
-import "./MyReviews.css";
+import "./MyReservations.css";
 
-export default function MyReviews({ activities }) {
+export default function MyReservations({ activities, reservations }) {
   const [activityTypes, setActivityTypes] = useState([]);
   const [sortOption, setSortOption] = useState("");
-  const storedUser = localStorage.getItem("username");
+    const storedUser = localStorage.getItem("username");
+
 
   const location = useLocation();
   const navigate = useNavigate();
@@ -15,6 +16,7 @@ export default function MyReviews({ activities }) {
     const params = new URLSearchParams(location.search);
     return params.get("category") || "All";
   });
+  reservations = (reservations || []).filter((r) => r.user_name === storedUser);
 
   const handleCategoryChange = (category) => {
     setSelectedCategory(category);
@@ -37,7 +39,7 @@ export default function MyReviews({ activities }) {
       return activity.activity_type === selectedCategory;
     })
     .filter((activity) => {
-      return activity.reviews.some((review) => review.user_name === storedUser);
+      return (activity.slots || []).some((slot) => (reservations || []).some((res) => res.timeslot === slot.id));
     })
     .sort((a, b) => {
       if (sortOption === "top_rated") {
@@ -50,25 +52,34 @@ export default function MyReviews({ activities }) {
 
       return 0;
     });
+  
+  // Build list of reservations (for the current user) mapped to their activity and slot
+  const userReservations = (reservations || []).flatMap((res, idx) => {
+    const activity = filteredActivities.find((a) => (a.slots || []).some((s) => s.id === res.timeslot));
+    if (!activity) return [];
+    const slot = (activity.slots || []).find((s) => s.id === res.timeslot) || null;
+    const key = res.id || `${activity.id}-${res.timeslot}-${idx}`;
+    return { reservation: res, activity, slot, key };
+  });
 
-  // Flatten reviews written by the current user so multiple reviews
-  // on the same activity are shown separately.
-  const userReviews = filteredActivities.flatMap((activity) =>
-    (activity.reviews || [])
-      .filter((r) => r.user_name === storedUser)
-      .map((r, idx) => ({
-        review: r,
-        activity,
-        key: r.id || `${activity.id}-${idx}`,
-      })),
-  );
+  const formatSlotRange = (slot) => {
+    if (!slot || !slot.start_time || !slot.end_time) return slot?.id ? String(slot.id) : "";
+    const s = new Date(slot.start_time);
+    const e = new Date(slot.end_time);
+    if (isNaN(s) || isNaN(e)) return `${slot.start_time} - ${slot.end_time}`;
+    const timeOpts = { hour: '2-digit', minute: '2-digit' };
+    if (s.toDateString() === e.toDateString()) {
+      return `${s.toLocaleDateString()} ${s.toLocaleTimeString([], timeOpts)} - ${e.toLocaleTimeString([], timeOpts)}`;
+    }
+    return `${s.toLocaleString()} - ${e.toLocaleString()}`;
+  };
 
   return (
     <>
       <div className="explore-container">
         <div className="platform-container">
           <header className="filter-section">
-            <h3 className="section-title">My Reviews</h3>
+            <h3 className="section-title">My Reservations</h3>
 
             <div className="filter-bar">
               <button
@@ -110,51 +121,32 @@ export default function MyReviews({ activities }) {
           </header>
 
           <div className="activities-grid-my-reviews">
-            {userReviews.map(({ review, activity, key }, idx) => {
-              const userRating = review ? review.rating : 0;
-
+            {userReservations.map(({ reservation, activity, slot, key }, idx) => {
               return (
                 <div key={key} className="activity-card">
                   <div className="card-image">
                     <img src={activity.image} alt={activity.name} />
                   </div>
-                 
-
                   <div className="card-content">
                     <div className="info-top">
-                      <span className="category-tag">
-                        {activity.activity_type}
-                      </span>
+                      <span className="category-tag">{activity.activity_type}</span>
                       <h4 className="location-name">{activity.name}</h4>
                     </div>
-                     <div>
-                    <strong>User:</strong> {review.user_name}
-                  </div>
 
-                    <div className="rating">
-                      {Array.from({ length: 5 }, (_, i) => (
-                        <span
-                          className="star"
-                          key={i}
-                          style={{
-                            color: i < userRating ? "#f1c40f" : "#444",
-                          }}
-                        >
-                          {i < userRating ? "★" : "☆"}
-                        </span>
-                      ))}
-                    </div>
-                    <div className="review-scroll-container">
-                      <div className="review-text">
-                        {review ? review.comment : "No review text"}
-                      </div>
+                    <div className="reservation-info">
+                      <div><strong>User:</strong> {reservation.user_name}</div>
+                      <div><strong>Timeslot:</strong> {reservation.timeslot}</div>
+                      <div><strong>Reserved at:</strong> {reservation.reserved_at ? new Date(reservation.reserved_at).toLocaleString() : "-"}</div>
+                      <div><strong>Status:</strong> {reservation.status}</div>
+                      {slot && (slot.start_time || slot.end_time) && (
+                        <div>
+                          <strong>Slot:</strong> {formatSlotRange(slot)}
+                        </div>
+                      )}
                     </div>
 
                     <div className="card-actions">
-                      <Link
-                        to={`/details/${activity.id}`}
-                        className="btn btn-details"
-                      >
+                      <Link to={`/details/${activity.id}`} className="btn btn-details">
                         Details
                       </Link>
                     </div>

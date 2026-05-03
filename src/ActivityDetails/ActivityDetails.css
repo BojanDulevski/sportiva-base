@@ -436,15 +436,65 @@ a:active {
   max-height: 45vh;
 }
 
-/* Mobile Adjustments */
-@media (max-width: 992px) {
+/* Responsive Adjustments — stack sections without changing DOM order */
+@media (max-width: 1024px) {
   .details-layout {
-    grid-template-columns: 1fr;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 24px;
   }
+
+  .details-nav {
+    width: 100% !important;
+    min-width: unset !important;
+    padding: 0 !important;
+  }
+
+  .content-side,
+  .main-slider,
+  .sticky-side {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  /* Disable sticky on small screens so it flows naturally in the column */
+  .sticky-side {
+    position: relative !important;
+    top: auto !important;
+  }
+
   .main-slider {
-    height: 350px;
+    height: 400px;
   }
+
   .main-title {
     font-size: 36px;
   }
+
+  .slots-card {
+    height: auto !important;
+    max-height: none !important;
+    padding: 1rem !important;
+  }
+
+  .review-card-section {
+    max-height: 35vh !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .main-slider { height: 300px !important; }
+  .main-title { font-size: 32px !important; }
+  .review-card { width: 100% !important; }
+  .slots-card { padding: 12px !important; }
+}
+
+@media (max-width: 480px) {
+  .main-slider { height: 220px !important; }
+  .main-title { font-size: 24px !important; }
+  .hero-info .badge-category { padding: 4px 10px !important; font-size: 11px !important; }
+  .thumb-item { width: 80px !important; height: 55px !important; }
+  .review-card-section { max-height: 30vh !important; }
+  .slot-row { flex-direction: column !important; align-items: flex-start !important; gap: 8px !important; padding: 10px 0 !important; }
+  .back-btn { font-size: 14px !important; }
 }
