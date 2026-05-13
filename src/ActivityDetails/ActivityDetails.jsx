@@ -140,7 +140,7 @@ const ActivityDetails = ({ activities }) => {
                   </div>
                 ))}
               </div>
-              <h1>Bojan</h1>
+              
             </div>
           </section>
 
