@@ -118,7 +118,6 @@ export default function MyReviews({ activities }) {
                   <div className="card-image">
                     <img src={activity.image} alt={activity.name} />
                   </div>
-                 
 
                   <div className="card-content">
                     <div className="info-top">
@@ -127,9 +126,9 @@ export default function MyReviews({ activities }) {
                       </span>
                       <h4 className="location-name">{activity.name}</h4>
                     </div>
-                     <div>
-                    <strong>User:</strong> {review.user_name}
-                  </div>
+                    <div>
+                      <strong>User:</strong> {review.user_name}
+                    </div>
 
                     <div className="rating">
                       {Array.from({ length: 5 }, (_, i) => (
