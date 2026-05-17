@@ -19,10 +19,20 @@ const ActivityDetails = ({ activities }) => {
   const [currentImg, setCurrentImg] = useState(0);
   const [selectedDate, setSelectedDate] = useState(new Date());
 
+  // --- Review modal state ---
+  const [showReviewModal, setShowReviewModal] = useState(false);
+  const [reviewForm, setReviewForm] = useState({ rating: 5, comment: "" });
+  const [reviewSubmitting, setReviewSubmitting] = useState(false);
+  const [reviewError, setReviewError] = useState("");
+  const [reviews, setReviews] = useState([]);
+
   useEffect(() => {
     if (activities?.length > 0) {
       const found = activities.find((a) => String(a.id) === String(id));
-      if (found) setActivity(found);
+      if (found) {
+        setActivity(found);
+        setReviews(found.reviews || []);
+      }
       setLoading(false);
     }
   }, [id, activities]);
@@ -33,9 +43,48 @@ const ActivityDetails = ({ activities }) => {
     setSelectedDate(newDate);
   };
 
-  const filteredSlots = activity?.slots?.filter((slot) => 
+  const filteredSlots = activity?.slots?.filter((slot) =>
     new Date(slot.start_time).toDateString() === selectedDate.toDateString()
   ) || [];
+
+  // --- Submit Review ---
+  const handleReviewSubmit = async () => {
+    if (!reviewForm.comment.trim()) {
+      setReviewError("Please write a comment.");
+      return;
+    }
+    setReviewSubmitting(true);
+    setReviewError("");
+
+    try {
+      // 🔁 Change this URL to your actual backend endpoint
+      const response = await fetch(`/api/activities/${id}/reviews/`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          // Add auth token if needed:
+          // "Authorization": `Bearer ${localStorage.getItem("token")}`,
+        },
+        body: JSON.stringify({
+          rating: reviewForm.rating,
+          comment: reviewForm.comment,
+        }),
+      });
+
+      if (!response.ok) throw new Error("Failed to submit review.");
+
+      const newReview = await response.json();
+
+      // Optimistically add to local list
+      setReviews((prev) => [newReview, ...prev]);
+      setShowReviewModal(false);
+      setReviewForm({ rating: 5, comment: "" });
+    } catch (err) {
+      setReviewError(err.message || "Something went wrong.");
+    } finally {
+      setReviewSubmitting(false);
+    }
+  };
 
   if (loading) return <div className="loader-screen"><div className="spinner"></div></div>;
   if (!activity) return <div className="error-screen">Activity not found</div>;
@@ -43,7 +92,7 @@ const ActivityDetails = ({ activities }) => {
   return (
     <div className="dashboard-wrapper">
       <div className="dashboard-container">
-        
+
         <nav className="top-nav">
           <Link to="/explore-activities" className="back-link">
             <span className="arrow-icon">←</span> Back to Explore
@@ -51,8 +100,8 @@ const ActivityDetails = ({ activities }) => {
         </nav>
 
         <div className="dashboard-grid">
-          
-        
+
+          {/* LEFT */}
           <section className="col-left">
             <div className="glass-panel main-info">
               <span className="type-badge">{activity.activity_type}</span>
@@ -85,7 +134,7 @@ const ActivityDetails = ({ activities }) => {
             </div>
           </section>
 
-          
+          {/* MID */}
           <section className="col-mid">
             <div className="gallery-card">
               <div className="gallery-header">
@@ -94,19 +143,19 @@ const ActivityDetails = ({ activities }) => {
               </div>
 
               <div className="main-stage">
-                <button className="nav-arrow prev" onClick={() => setCurrentImg(prev => prev === 0 ? activity.gallery.length-1 : prev-1)}>❮</button>
+                <button className="nav-arrow prev" onClick={() => setCurrentImg(prev => prev === 0 ? activity.gallery.length - 1 : prev - 1)}>❮</button>
                 <div className="image-container">
                   {activity.gallery?.length > 0 ? (
                     <img src={activity.gallery[currentImg]?.image} alt="Main" className="fade-img" key={currentImg} />
                   ) : <div className="no-img">No images</div>}
                 </div>
-                <button className="nav-arrow next" onClick={() => setCurrentImg(prev => prev === activity.gallery.length-1 ? 0 : prev+1)}>❯</button>
+                <button className="nav-arrow next" onClick={() => setCurrentImg(prev => prev === activity.gallery.length - 1 ? 0 : prev + 1)}>❯</button>
               </div>
 
               <div className="thumbnail-strip">
                 {activity.gallery?.map((img, idx) => (
-                  <div 
-                    key={img.id} 
+                  <div
+                    key={img.id}
                     className={`thumb-box ${idx === currentImg ? 'active' : ''}`}
                     onClick={() => setCurrentImg(idx)}
                   >
@@ -117,7 +166,7 @@ const ActivityDetails = ({ activities }) => {
             </div>
           </section>
 
-          
+          {/* RIGHT */}
           <section className="col-right">
             <div className="map-panel-compact">
               <SimpleMap activities={[activity]} detailsActivity={activity} />
@@ -142,25 +191,84 @@ const ActivityDetails = ({ activities }) => {
               </div>
             </div>
 
+            {/* REVIEWS PANEL */}
             <div className="glass-panel reviews-panel">
-              <h4>Gym Reviews</h4>
+              <div className="reviews-header">
+                <h4>Gym Reviews</h4>
+                <button className="add-review-btn" onClick={() => setShowReviewModal(true)}>
+                  + Add Review
+                </button>
+              </div>
               <div className="reviews-container">
-                {activity.reviews?.map(r => (
+                {reviews.length > 0 ? reviews.map(r => (
                   <div key={r.id} className="review-card-mini">
                     <div className="rev-header">
-                      <div className="rev-avatar">{r.user_name[0]}</div>
-                      <span className="rev-name">{r.user_name}</span>
+                      <div className="rev-avatar">{r.user_name?.[0]}</div>
+                      <div>
+                        <span className="rev-name">{r.user_name}</span>
+                        {r.rating && (
+                          <span className="rev-rating">{"★".repeat(r.rating)}{"☆".repeat(5 - r.rating)}</span>
+                        )}
+                      </div>
                     </div>
                     <p>"{r.comment}"</p>
                   </div>
-                ))}
+                )) : <p className="no-data">No reviews yet. Be the first!</p>}
               </div>
-              
             </div>
           </section>
 
         </div>
       </div>
+
+      {/* REVIEW MODAL */}
+      {showReviewModal && (
+        <div className="modal-overlay" onClick={() => setShowReviewModal(false)}>
+          <div className="modal-box" onClick={e => e.stopPropagation()}>
+            <div className="modal-header">
+              <h3>Write a Review</h3>
+              <button className="modal-close" onClick={() => setShowReviewModal(false)}>✕</button>
+            </div>
+
+            <div className="modal-body">
+              <label className="modal-label">Rating</label>
+              <div className="star-picker">
+                {[1, 2, 3, 4, 5].map(star => (
+                  <button
+                    key={star}
+                    className={`star-btn ${star <= reviewForm.rating ? "active" : ""}`}
+                    onClick={() => setReviewForm(f => ({ ...f, rating: star }))}
+                  >
+                    ★
+                  </button>
+                ))}
+              </div>
+
+              <label className="modal-label">Your Comment</label>
+              <textarea
+                className="modal-textarea"
+                placeholder="Share your experience..."
+                value={reviewForm.comment}
+                onChange={e => setReviewForm(f => ({ ...f, comment: e.target.value }))}
+                rows={4}
+              />
+
+              {reviewError && <p className="modal-error">{reviewError}</p>}
+            </div>
+
+            <div className="modal-footer">
+              <button className="modal-cancel" onClick={() => setShowReviewModal(false)}>Cancel</button>
+              <button
+                className="modal-submit"
+                onClick={handleReviewSubmit}
+                disabled={reviewSubmitting}
+              >
+                {reviewSubmitting ? "Submitting..." : "Submit Review"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
