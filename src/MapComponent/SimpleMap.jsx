@@ -2,7 +2,8 @@ import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import "./SimpleMap.css";
-
+import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 // 1. Креирање на сопствена неонска икона преку CSS
 const neonIcon = L.divIcon({
   className: "custom-neon-icon",
@@ -16,8 +17,9 @@ const neonIcon = L.divIcon({
 
 const ModernMap = ({ activities, costumStyle, detailsActivity, activityType }) => {
 
- 
+ const navigate = useNavigate();
   const handleDirections = (activity) => {
+    
     const query = encodeURIComponent(
       ` ${activity.google_maps_address || ""}`,
     );
@@ -76,7 +78,11 @@ const ModernMap = ({ activities, costumStyle, detailsActivity, activityType }) =
               <Popup className="cyber-popup">
                 {activity.name}
                 <div className="popup-buttons">
-                  <button className="popup-btn">Show Details</button>
+                  <button className="popup-btn"
+                  onClick={() => navigate(`/details/${activity.id}`)}>
+        
+                    Show Details
+                  </button>
                   <button className="popup-btn" onClick={() => handleDirections(activity)}>
                     Get Directions
                   </button>

@@ -114,7 +114,9 @@ export default function MainHome({ activities }) {
           </div>
         </div>
         <section className="popular-gyms">
-          <h2 className="section-title">Popular Gyms</h2>
+          <h2 className="section-title" style={{ fontSize: '2rem' }}>
+            Popular Gyms
+          </h2>
           <div className="popular-gyms-grid">
             {activities
               .sort((a, b) => b.average_rating - a.average_rating)

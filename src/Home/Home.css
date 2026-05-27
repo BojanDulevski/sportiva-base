@@ -580,7 +580,8 @@ main {
     margin: 10px;
     max-width: 400px;
   }
-  .section-title {
+  .popular-gyms .section-title {
+    font-size: 2rem;
     text-align: center;
   }
   .map-wrapper {
