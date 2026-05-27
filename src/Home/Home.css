@@ -3,13 +3,15 @@
   padding: 0;
   box-sizing: border-box;
 }
+
+/* ПРОМЕНА 1: Насловите од темно сиви (#989898) сега се чисто бели (#ffffff) */
 h1,
 h2,
 h3,
 h4,
 h5,
 h6 {
-  color: #989898 !important; /* --neon */
+  color: #ffffff !important; 
 }
 
 body {
@@ -113,6 +115,7 @@ main {
   border-color: #00ddeb; /* --neon */
 }
 
+/* Задржано со неонска боја за јасен контраст во картичките */
 .card h2 {
   color: #00ddeb; /* --neon */
   margin-bottom: 12px;
@@ -207,8 +210,9 @@ main {
   margin: 0 auto;
 }
 
+/* ПРОМЕНА 2: Спонзорите од сива боја (rgba(255,255,255,0.65)) се направени посветли и почисти за око */
 .sponsor {
-  color: rgba(255, 255, 255, 0.65);
+  color: rgba(255, 255, 255, 0.9);
   font-size: 0.95em;
   font-weight: 500;
   padding: 8px 15px;
@@ -289,7 +293,7 @@ main {
 .popular-gyms {
   padding: 50px 20px;
   font-family: "Inter", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-  background-color: #1a2333; /* Посветла темна нијанса за целосен континуитет */
+  background-color: #1a2333; 
   text-align: center;
   min-width: 700px;
   min-height: 600px;
@@ -301,8 +305,9 @@ main {
   justify-content: space-around;
 }
 
+/* ПРОМЕНА 3: Поправен е невалидниот синтакс `font-size: 2 !important;` во `font-size: 2rem !important;` за да работи правилно во бела боја */
 .section-title {
-  font-size: 2 !important;
+  font-size: 2rem !important;
   margin-bottom: 30px;
   color: white;
 }
@@ -359,13 +364,13 @@ main {
 
 .rating {
   margin-bottom: 15px;
-  color: #f1c40f; /* Ѕвезди рејтинг */
+  color: #f1c40f; 
   filter: drop-shadow(0 0 2px rgba(241, 196, 15, 0.3));
   margin-top: auto;
 }
 
 .rating-text {
-  color: rgba(255, 255, 255, 0.55);
+  color: rgba(255, 255, 255, 0.75); /* ПРОМЕНА 4: Текстот до рејтингот е направен посветол */
   font-size: 0.9rem;
   margin-left: 5px;
 }
@@ -374,7 +379,7 @@ main {
   width: 100%;
   padding: 12px;
   background-color: #00ddeb; /* --neon */
-  color: #1a2333; /* Контраст со новата позадина */
+  color: #1a2333; 
   border: none;
   border-radius: 8px;
   cursor: pointer;
@@ -429,7 +434,7 @@ main {
 }
 
 .stat-card.wide .stat-label {
-  color: rgba(255, 255, 255, 0.65);
+  color: rgba(255, 255, 255, 0.85); /* ПРОМЕНА 5: Ознаката на статистиката е посветла */
 }
 
 .stat-card.highlight {
@@ -455,7 +460,7 @@ main {
   font-size: 0.7rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  color: rgba(255, 255, 255, 0.6);
+  color: rgba(255, 255, 255, 0.8); /* ПРОМЕНА 6: Текстот под бројките во статистиката е побел */
   font-weight: 600;
 }
 
@@ -496,7 +501,6 @@ main {
     min-width: 360px;
     min-height: 360px;
     max-height: 360px;
-
   }
   .map-wrapper .leaflet-container .leaflet-touch .leaflet-retina .leaflet-safari .leaflet-fade-anim .leaflet-grab .leaflet-touch-drag .leaflet-touch-zoom{
      min-width: 360px!important;
@@ -531,7 +535,6 @@ main {
     width: 100%;
   }
 
-  
   .header {
     flex-direction: column;
     text-align: center;
@@ -555,7 +558,6 @@ main {
   }
   main .container{
     max-width: 768px;
-
   }
 
   .stats-compact-container {

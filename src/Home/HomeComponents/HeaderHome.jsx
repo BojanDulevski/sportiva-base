@@ -94,7 +94,7 @@ export default function HeaderHome({ activities }) {
                         .length
                     }
                   </span>
-                  <span className="stat-label">Boxing</span>
+                  <span className="stat-label">Boxingdasdsada</span>
                 </div>
               </div>
 
