@@ -36,12 +36,12 @@ const ModernMap = ({ activities, costumStyle, detailsActivity, activityType }) =
     <div className="map-wrapper">
       <MapContainer
         center= {detailsActivity ? JSON.parse(detailsActivity.location) : prilepCenter}
-        zoom={detailsActivity ? 15 : 13}
+        zoom={detailsActivity ? 15 : 14}
         zoomControl={false}
         attributionControl={false}
         style={{
-          height: "350px",
-          width: "350px",
+          height: costumStyle?.height || "350px",
+          width: costumStyle?.width || "350px",
           borderRadius: "15px",
           ...costumStyle,
         }}

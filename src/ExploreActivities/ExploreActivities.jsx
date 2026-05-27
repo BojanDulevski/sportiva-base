@@ -85,6 +85,7 @@ export default function ExploreActivities({ activities }) {
               <select
                 onChange={(e) => handleSortChange(e.target.value)}
                 className="sort-select"
+                
               >
                 <option value="">Select</option>
                 <option value="top_rated">Top Rated</option>

@@ -13,7 +13,7 @@
     }
 
   .dashboard-wrapper {
-    background-color: var(--dark-bg);
+  background-color: #1a2333 !important; /* За една нијанса посветла, помодерна темна позадина */
     color: white;
     min-height: 100vh;
     padding: 20px 40px;
@@ -66,8 +66,11 @@
 
 
   .glass-panel {
-    background: var(--glass-bg);
-    border: 1px solid var(--glass-border);
+background: linear-gradient(
+    1000deg,
+    #1a2333 0%,
+    rgba(255, 255, 255, 0.1) 100%
+  );    border: 1px solid var(--glass-border);
     border-radius: 20px;
     padding: 20px;
     @supports (backdrop-filter: blur(10px)) {
@@ -120,6 +123,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    gap: 10px;
   }
 
 

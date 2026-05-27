@@ -1,15 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
-import { useNavigate } from "react-router-dom"; 
+import { useNavigate } from "react-router-dom";
 
 import SimpleMap from "../../MapComponent/SimpleMap";
 
-export default function HeaderHome({activities}) {
+export default function HeaderHome({ activities }) {
   const [searchValue, setSearchValue] = useState("");
   const navigate = useNavigate();
   const [users, setUsers] = useState(0);
 
-  
   const username = localStorage.getItem("username");
 
   const navigateToActivity = () => {
@@ -22,7 +21,7 @@ export default function HeaderHome({activities}) {
 
   const handleKeyDown = (event) => {
     if (event.key === "Enter") {
-      navigateToActivity();  
+      navigateToActivity();
     }
   };
 
@@ -36,12 +35,12 @@ export default function HeaderHome({activities}) {
   return (
     <header className="header">
       <div className="header-left">
-        <h1>
-          Hey {username ? username : "there"}! If you're on the hunt for the best fitness activities in
-          Prilep, look no further. You've officially found your new home for
-          health!
-        </h1>
-        <div className="search-container">
+        <div className="welcome-search">
+          <h1>
+            Hey {username ? username : "there"}! If you're on the hunt for the
+            best fitness activities in Prilep, look no further. You've
+            officially found your new home for health!
+          </h1>
           <div className="search-box">
             <input
               type="text"
@@ -50,10 +49,7 @@ export default function HeaderHome({activities}) {
               onKeyDown={handleKeyDown}
               onChange={(e) => setSearchValue(e.target.value)}
             />
-            <button
-              className="search-btn"
-              onClick={() => navigateToActivity()}
-            >
+            <button className="search-btn" onClick={() => navigateToActivity()}>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="20"
@@ -70,7 +66,9 @@ export default function HeaderHome({activities}) {
               </svg>
             </button>
           </div>
+        </div>
 
+        <div className="search-container">
           <div className="stats-compact-container">
             <div className="stat-card wide">
               <div className="card-inner">
@@ -121,10 +119,6 @@ export default function HeaderHome({activities}) {
             </div>
           </div>
         </div>
-      </div>
-
-      <div className="header_map">
-        <SimpleMap activities={activities} activityType="All" />
       </div>
     </header>
   );

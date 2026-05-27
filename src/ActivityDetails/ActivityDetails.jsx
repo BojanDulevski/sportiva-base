@@ -18,6 +18,7 @@ const ActivityDetails = ({ activities }) => {
   const [loading, setLoading] = useState(true);
   const [currentImg, setCurrentImg] = useState(0);
   const [selectedDate, setSelectedDate] = useState(new Date());
+  const [selectedSport, setSelectedSport] = useState("");
 
   // --- Динамички состојби за рефреш во реално време ---
   const [reviews, setReviews] = useState([]);
@@ -52,19 +53,35 @@ const ActivityDetails = ({ activities }) => {
     }
   }, [id, activities]);
 
+  useEffect(() => {
+    if (activity?.activity_type === "gym") {
+      setSelectedSport("gym");
+    }
+  }, [activity]);
+
   const changeDate = (days) => {
     const newDate = new Date(selectedDate);
     newDate.setDate(newDate.getDate() + days);
     setSelectedDate(newDate);
   };
 
-  // Сега филтрираме од локалната состојба `slots`, а не директно од `activity.slots`
+  // Филтрирање: Само слотови за избраниот датум, кои НЕ СЕ поминати (пред `now`) и кои НЕ СЕ веќе резервирани
   const filteredSlots =
-    slots?.filter(
-      (slot) =>
-        new Date(slot.start_time).toDateString() ===
-        selectedDate.toDateString(),
-    ) || [];
+    slots?.filter((slot) => slot.is_full === false).filter((slot) => {
+      const slotDate = new Date(slot.start_time);
+      const now = new Date();
+
+      // 1. Проверка дали слотот припаѓа на избраниот датум
+      const isSameDate = slotDate.toDateString() === selectedDate.toDateString();
+
+      // 2. Проверка дали слотот е во иднината (ако гледаме за денес, да не ги дава поминатите часови)
+      const isFutureSlot = slotDate.getTime() >= now.getTime();
+
+      // 3. Проверка дали слотот е веќе резервиран (се потпира на флаг од бекендот како `is_reserved` или `reserved`)
+      const isAlreadyReserved = slot.is_reserved || slot.reserved || slot.status === "reserved";
+
+      return isSameDate && isFutureSlot && !isAlreadyReserved;
+    }) || [];
 
   // --- Submit Review ---
   const handleReviewSubmit = async () => {
@@ -77,7 +94,7 @@ const ActivityDetails = ({ activities }) => {
       return;
     }
 
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem("token");
     try {
       const response = await fetch("http://127.0.0.1:8000/api/review/", {
         method: "POST",
@@ -96,12 +113,11 @@ const ActivityDetails = ({ activities }) => {
 
       if (response.ok) {
         window.location.reload();
-        alert("Review submitted successfully!");
         setShowReviewModal(false);
-        
+
         // Автоматски рефреш на листата со рецензии веднаш
         setReviews([...reviews, data]);
-        
+
         // Ресетирање на формата за следен пат
         setReviewForm({
           activity: parseInt(id),
@@ -132,7 +148,7 @@ const ActivityDetails = ({ activities }) => {
     setReservationError("");
     setReservationSubmitting(true);
 
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem("token");
     try {
       const response = await fetch("http://127.0.0.1:8000/api/reservation/", {
         method: "POST",
@@ -142,6 +158,7 @@ const ActivityDetails = ({ activities }) => {
         },
         body: JSON.stringify({
           timeslot: selectedSlot.id, // Поправено според твојот Serializer
+          sportType: selectedSport, // Додавање на избраниот спорт/дисциплина
         }),
       });
 
@@ -149,12 +166,11 @@ const ActivityDetails = ({ activities }) => {
 
       if (response.ok) {
         window.location.reload();
-        alert("Reservation confirmed successfully!");
         setShowReservationModal(false);
 
         // --- Автоматски рефреш на слотовите ---
         // Опција А: Ако сакаш веднаш да го СКИПНЕШ/ОТСТРАНИШ резервираниот слот од листата:
-        setSlots(slots.filter(s => s.id !== selectedSlot.id));
+        setSlots(slots.filter((s) => s.id !== selectedSlot.id));
 
         /* 
         Опција Б: Ако твојот слот има статус (на пр. 'status': 'reserved') и сакаш да остане видлив, 
@@ -162,13 +178,12 @@ const ActivityDetails = ({ activities }) => {
         
         setSlots(slots.map(s => s.id === selectedSlot.id ? { ...s, status: 'reserved' } : s));
         */
-
       } else {
         console.log("Грешка при резервација:", data);
         setReservationError(data.detail || JSON.stringify(data));
       }
     } catch (err) {
-      setReservationError("Server connection failed.");
+      setReservationError("Reservation failed. Make sure you don't have this slot already booked, or try");
     } finally {
       setReservationSubmitting(false);
     }
@@ -200,7 +215,8 @@ const ActivityDetails = ({ activities }) => {
               <div className="rating-row">
                 <span className="stars">★ {activity.average_rating}</span>
                 <span className="count">
-                  ({reviews.length} reviews) {/* Се пресметува од динамичката состојба */}
+                  ({reviews.length} reviews){" "}
+                  {/* Се пресметува од динамичката состојба */}
                 </span>
               </div>
             </div>
@@ -314,7 +330,12 @@ const ActivityDetails = ({ activities }) => {
                           minute: "2-digit",
                         })}
                       </span>
-                      <button className="book-btn" onClick={() => handleBookClick(slot)}>Book</button>
+                      <button
+                        className="book-btn"
+                        onClick={() => handleBookClick(slot)}
+                      >
+                        Book
+                      </button>
                     </div>
                   ))
                 ) : (
@@ -340,7 +361,9 @@ const ActivityDetails = ({ activities }) => {
                   [...reviews].reverse().map((r) => (
                     <div key={r.id} className="review-card-mini">
                       <div className="rev-header">
-                        <div className="rev-avatar">{r.user_name?.[0]?.toUpperCase()}</div>
+                        <div className="rev-avatar">
+                          {r.user_name?.[0]?.toUpperCase()}
+                        </div>
                         <div>
                           <span className="rev-name">{r.user_name}</span>
                           {r.rating && (
@@ -447,15 +470,127 @@ const ActivityDetails = ({ activities }) => {
             </div>
 
             <div className="modal-body">
-              <p>You are booking a slot for <strong>{activity.name}</strong>.</p>
-              
-              <div className="booking-details-summary" style={{ marginTop: "15px", padding: "10px", background: "rgba(255,255,255,0.05)", borderRadius: "6px" }}>
-                <p>📅 <strong>Date:</strong> {selectedDate.toLocaleDateString("en-US", { weekday: 'long', month: 'long', day: 'numeric' })}</p>
-                <p>⏰ <strong>Time:</strong> {new Date(selectedSlot.start_time).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}</p>
-                <p>📍 <strong>Type:</strong> {activity.activity_type}</p>
+              <p>
+                You are booking a slot for <strong>{activity.name}</strong>.
+              </p>
+
+              <div
+                className="booking-details-summary"
+                style={{
+                  marginTop: "15px",
+                  padding: "10px",
+                  background: "rgba(255,255,255,0.05)",
+                  borderRadius: "6px",
+                }}
+              >
+                <p>
+                  📅 <strong>Date:</strong>{" "}
+                  {selectedDate.toLocaleDateString("en-US", {
+                    weekday: "long",
+                    month: "long",
+                    day: "numeric",
+                  })}
+                </p>
+                <p>
+                  ⏰ <strong>Time:</strong>{" "}
+                  {new Date(selectedSlot.start_time).toLocaleTimeString([], {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  })}
+                </p>
+                <p>
+                  📍 <strong>Type:</strong>{" "}
+                  {activity.activity_type === "sports_hall"
+                    ? "Sports Hall"
+                    : activity.activity_type === "box"
+                      ? "Box"
+                      : "Gym"}
+                </p>
+
+                {/* 1. Ако е ТЕРЕТАНА (gym) - Автоматски се поставува како Gym */}
+                {activity.activity_type === "gym" && (
+                  <p>
+                    🏋️‍♂️ <strong>Activity:</strong> Gym Session
+                  </p>
+                )}
+
+                {/* 2. Ако е СПОРТСКА САЛА (sports_hall) - Се бира спорт */}
+                {activity.activity_type === "sports_hall" && (
+                  <div
+                    style={{
+                      marginTop: "10px",
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "10px",
+                    }}
+                  >
+                    <label htmlFor="sport-select">
+                      ⚽ <strong>Choose Sport:</strong>
+                    </label>
+                    <select
+                      id="sport-select"
+                      value={selectedSport}
+                      onChange={(e) => setSelectedSport(e.target.value)}
+                      style={{
+                        padding: "5px 10px",
+                        background: "#1a2333",
+                        color: "white",
+                        border: "1px solid rgba(255,255,255,0.2)",
+                        borderRadius: "4px",
+                        outline: "none",
+                      }}
+                    >
+                      <option value="">-- Choose Sport --</option>
+                      <option value="Football">Football</option>
+                      <option value="Basketball">Basketball</option>
+                      <option value="Volleyball">Volleyball</option>
+                      <option value="Handball">Handball</option>
+                    </select>
+                  </div>
+                )}
+
+                {/* 3. Ако е БОКС (box) - Се бира дисциплина */}
+                {activity.activity_type === "box" && (
+                  <div
+                    style={{
+                      marginTop: "10px",
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "10px",
+                    }}
+                  >
+                    <label htmlFor="box-select">
+                      🥊 <strong>Choose Discipline:</strong>
+                    </label>
+                    <select
+                      id="box-select"
+                      value={selectedSport}
+                      onChange={(e) => setSelectedSport(e.target.value)}
+                      style={{
+                        padding: "5px 10px",
+                        background: "#1a2333",
+                        color: "white",
+                        border: "1px solid rgba(255,255,255,0.2)",
+                        borderRadius: "4px",
+                        outline: "none",
+                      }}
+                    >
+                      <option value="">-- Choose Discipline --</option>
+                      <option value="Boxing">Boxing</option>
+                      <option value="Kickboxing">Kickboxing</option>
+                    </select>
+                  </div>
+                )}
               </div>
 
-              {reservationError && <p className="modal-error" style={{ color: "#ff4a4a", marginTop: "15px" }}>{reservationError}</p>}
+              {reservationError && (
+                <p
+                  className="modal-error"
+                  style={{ color: "#ff4a4a", marginTop: "15px" }}
+                >
+                  {reservationError}
+                </p>
+              )}
             </div>
 
             <div className="modal-footer">
@@ -470,7 +605,9 @@ const ActivityDetails = ({ activities }) => {
                 onClick={handleReservationSubmit}
                 disabled={reservationSubmitting}
               >
-                {reservationSubmitting ? "Processing..." : "Confirm Reservation"}
+                {reservationSubmitting
+                  ? "Processing..."
+                  : "Confirm Reservation"}
               </button>
             </div>
           </div>

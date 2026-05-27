@@ -10,7 +10,7 @@ function Login() {
   
   const [error, setError] = useState('');
   const navigate = useNavigate();
-
+  const [reviewError, setReviewError] = useState("");
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
@@ -29,14 +29,13 @@ function Login() {
       if (response.ok) {
         localStorage.setItem('token', data.token);
         localStorage.setItem('username', data.username);
-        alert("Login successful!");
         navigate('/'); 
         window.location.reload(); 
       } else {
-        setError(data.non_field_errors || "Invalid username or password.");
+        setReviewError( "Invalid username or password.");
       }
-    } catch (err) {
-      setError("Connection failed. Make sure your Django server is running.");
+    } catch (reviewError) {
+      setReviewError("Connection failed. Make sure your Django server is running.");
     }
   };
 
@@ -45,12 +44,11 @@ function Login() {
       <div className="auth-card">
         <h2>Welcome Back</h2>
         <p>Login to your Sportiva Base account.</p>
-        {error && <div className="error-message" style={{color: 'red', marginBottom: '10px', fontSize: '14px'}}>{error}</div>}
+        {reviewError && <div className="error-message" style={{color: 'red', marginBottom: '10px', fontSize: '14px'}}>{reviewError}</div>}
         <form onSubmit={handleSubmit}>
           <div className="input-group">
             <label>Username</label>
             <input 
-              type="text" 
               placeholder="Enter your username"
               value={formData.username}
               onChange={(e) => setFormData({...formData, username: e.target.value})} 

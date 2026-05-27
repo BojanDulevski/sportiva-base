@@ -1,13 +1,20 @@
+
 import SimpleMap from "../MapComponent/SimpleMap";
 import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate, Link } from "react-router-dom";
 import "./MyReservations.css";
 
-export default function MyReservations({ activities, reservations }) {
+export default function MyReservations({ activities, reservations: initialReservations }) {
   const [activityTypes, setActivityTypes] = useState([]);
-  const [sortOption, setSortOption] = useState("");
-    const storedUser = localStorage.getItem("username");
+  const [filterOption, setFilterOption] = useState(""); 
+  const [localReservations, setLocalReservations] = useState([]);
+  const storedUser = localStorage.getItem("username");
 
+  // Состојби за модалот
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedResId, setSelectedResId] = useState(null);
+  const [modalMessage, setModalMessage] = useState("");
+  const [isNotification, setIsNotification] = useState(false); 
 
   const location = useLocation();
   const navigate = useNavigate();
@@ -16,21 +23,68 @@ export default function MyReservations({ activities, reservations }) {
     const params = new URLSearchParams(location.search);
     return params.get("category") || "All";
   });
-  reservations = (reservations || []).filter((r) => r.user_name === storedUser);
+
+  // Синхронизација на почетните резервации филтрирани по корисник
+  useEffect(() => {
+    const filtered = (initialReservations || []).filter((r) => r.user_name === storedUser);
+    setLocalReservations(filtered);
+  }, [initialReservations, storedUser]);
 
   const handleCategoryChange = (category) => {
     setSelectedCategory(category);
     navigate(`?category=${category}`);
   };
-  const handleSortChange = (sortOption) => {
-    setSortOption(sortOption);
+
+  const handleFilterChange = (option) => {
+    setFilterOption(option);
   };
+
   useEffect(() => {
     const params = new URLSearchParams(location.search);
     const cat = params.get("category") || "All";
     setSelectedCategory(cat);
     setActivityTypes(cat);
   }, [location.search]);
+
+  // Се активира кога корисникот ќе кликне на Cancel копчето во картичката
+  const openCancelModal = (reservationId) => {
+    setSelectedResId(reservationId);
+    setModalMessage("Are you sure you want to cancel this reservation?");
+    setIsNotification(false);
+    setIsModalOpen(true);
+  };
+
+  // Се активира кога корисникот ќе кликне "Yes" во модалот
+  const handleConfirmCancel = async () => {
+    if (!selectedResId) return;
+
+    try {
+      const response = await fetch(`http://127.0.0.1:8000/api/reservations/delete/${selectedResId}/`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (response.ok) {
+        setLocalReservations((prev) => prev.filter((res) => res.id !== selectedResId));
+        setModalMessage("Reservation cancelled successfully.");
+        setIsNotification(true);
+      } else {
+        setModalMessage("Failed to cancel the reservation. Please try again.");
+        setIsNotification(true);
+      }
+    } catch (error) {
+      console.error("Error cancelling reservation:", error);
+      setModalMessage("An error occurred. Please try again.");
+      setIsNotification(true);
+    }
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setSelectedResId(null);
+  };
 
   const filteredActivities = (activities || [])
     .filter((activity) => {
@@ -39,28 +93,42 @@ export default function MyReservations({ activities, reservations }) {
       return activity.activity_type === selectedCategory;
     })
     .filter((activity) => {
-      return (activity.slots || []).some((slot) => (reservations || []).some((res) => res.timeslot === slot.id));
-    })
-    .sort((a, b) => {
-      if (sortOption === "top_rated") {
-        return b.average_rating - a.average_rating;
-      }
-
-      if (sortOption === "most_reviewed") {
-        return b.reviews_count - a.reviews_count;
-      }
-
-      return 0;
+      return (activity.slots || []).some((slot) => (localReservations || []).some((res) => res.timeslot === slot.id));
     });
   
-  // Build list of reservations (for the current user) mapped to their activity and slot
-  const userReservations = (reservations || []).flatMap((res, idx) => {
+  const userReservations = (localReservations || []).flatMap((res, idx) => {
     const activity = filteredActivities.find((a) => (a.slots || []).some((s) => s.id === res.timeslot));
     if (!activity) return [];
     const slot = (activity.slots || []).find((s) => s.id === res.timeslot) || null;
     const key = res.id || `${activity.id}-${res.timeslot}-${idx}`;
     return { reservation: res, activity, slot, key };
   });
+
+  // Логика за ФИЛТРИРАЊЕ + АВТОМАТСКО СОРТИРАЊЕ (Најновите први)
+  const filteredUserReservations = userReservations
+    .filter(({ slot }) => {
+      if (!filterOption) return true; 
+      
+      const now = new Date();
+      const startTime = slot && slot.start_time ? new Date(slot.start_time) : new Date(0);
+
+      if (filterOption === "upcoming") {
+        return startTime >= now;
+      }
+
+      if (filterOption === "past") {
+        return startTime < now;
+      }
+
+      return true;
+    })
+    .sort((a, b) => {
+      const timeA = a.slot && a.slot.start_time ? new Date(a.slot.start_time) : new Date(0);
+      const timeB = b.slot && b.slot.start_time ? new Date(b.slot.start_time) : new Date(0);
+      
+      // Сортирање од најнов датум кон најстар
+      return timeB - timeA;
+    });
 
   const formatSlotRange = (slot) => {
     if (!slot || !slot.start_time || !slot.end_time) return slot?.id ? String(slot.id) : "";
@@ -107,21 +175,23 @@ export default function MyReservations({ activities, reservations }) {
                 Sports Halls
               </button>
             </div>
+            
             <div className="sort-box">
-              <span className="sort-label">Sort By</span>
+              <span className="sort-label">Filter By</span>
               <select
-                onChange={(e) => handleSortChange(e.target.value)}
+                onChange={(e) => handleFilterChange(e.target.value)}
                 className="sort-select"
+                value={filterOption}
               >
-                <option value="">Select</option>
-                <option value="top_rated">Top Rated</option>
-                <option value="most_reviewed">Most Reviewed</option>
+                <option value="">All</option>
+                <option value="upcoming">Upcoming</option>
+                <option value="past">Past</option>
               </select>
             </div>
           </header>
 
           <div className="activities-grid-my-reviews">
-            {userReservations.map(({ reservation, activity, slot, key }, idx) => {
+            {filteredUserReservations.map(({ reservation, activity, slot, key }) => {
               return (
                 <div key={key} className="activity-card">
                   <div className="card-image">
@@ -136,18 +206,25 @@ export default function MyReservations({ activities, reservations }) {
                     <div className="reservation-info">
                       <div><strong>User:</strong> {reservation.user_name}</div>
                       <div><strong>Reserved at:</strong> {reservation.reserved_at ? new Date(reservation.reserved_at).toLocaleString() : "-"}</div>
-                      <div><strong>Status:</strong> {reservation.status}</div>
-                      {slot && (slot.start_time || slot.end_time) && (
+                      <div><strong>Sport Type:</strong> {reservation.sportType}</div>
+                      {slot && (slot.start_time || slot.end_time) && (  
                         <div>
                           <strong>Slot:</strong> {formatSlotRange(slot)}
                         </div>
                       )}
                     </div>
 
-                    <div className="card-actions">
+                    <div className="card-actions" style={{ display: 'flex', gap: '10px' }}>
                       <Link to={`/details/${activity.id}`} className="btn btn-details">
                         Details
                       </Link>
+                      <button 
+                        onClick={() => openCancelModal(reservation.id)} 
+                        className="btn btn-cancel"
+                        style={{ backgroundColor: '#dc3545', color: 'white', border: 'none', padding: '6px 12px', borderRadius: '4px', cursor: 'pointer' }}
+                      >
+                        Cancel
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -162,6 +239,42 @@ export default function MyReservations({ activities, reservations }) {
           activityType={activityTypes}
         />
       </div>
+
+      {/* Кориснички Модал прозорец */}
+      {isModalOpen && (
+        <div className="modal-overlay">
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '15px', backgroundColor: '#1a1f2a', padding: '30px', borderRadius: '10px', width: '400px', textAlign: 'center' }}>
+            <h4>Confirmation</h4>
+            <p>{modalMessage}</p>
+            
+            <div style={{ display: 'flex', justifyContent: 'center', gap: '15px' }}>
+              {!isNotification ? (
+                <>
+                  <button 
+                    onClick={handleConfirmCancel}
+                    style={{ backgroundColor: '#dc3545', color: 'white', border: 'none', padding: '10px 20px', borderRadius: '5px', cursor: 'pointer', fontWeight: 'bold' }}
+                  >
+                    Yes
+                  </button>
+                  <button 
+                    onClick={closeModal}
+                    style={{ backgroundColor: '#6c757d', color: 'white', border: 'none', padding: '10px 20px', borderRadius: '5px', cursor: 'pointer', fontWeight: 'bold' }}
+                  >
+                    No
+                  </button>
+                </>
+              ) : (
+                <button 
+                  onClick={closeModal}
+                  style={{ backgroundColor: '#007bff', color: 'white', border: 'none', padding: '10px 25px', borderRadius: '5px', cursor: 'pointer', fontWeight: 'bold' }}
+                >
+                  OK
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 }

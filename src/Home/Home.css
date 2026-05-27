@@ -3,28 +3,52 @@
   padding: 0;
   box-sizing: border-box;
 }
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: #989898 !important; /* --neon */
+}
 
 body {
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  font-family: "Inter", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   line-height: 1.6;
-  color: #333;
-  background-color: #f4f4f4;
+  color: white;
+  background-color: #1a2333; /* За една нијанса посветла, помодерна темна позадина */
+}
+main {
+  padding: 10px;
 }
 
 /* Header */
 .header {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(
+    1000deg,
+    #1a2333 0%,
+    rgba(255, 255, 255, 0.1) 100%
+  );
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   color: white;
   padding: 40px 20px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.25);
   display: flex;
   justify-content: space-around;
 }
 
 .header-left {
+  gap: 40px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+}
+
+.welcome-search {
   display: flex;
   flex-direction: column;
-  justify-content: space-around;
+  gap: 40px;
 }
 
 .header h1 {
@@ -32,6 +56,7 @@ body {
   font-weight: 700;
   line-height: 1.3;
   max-width: 900px;
+  color: white;
 }
 
 /* Main Container */
@@ -43,6 +68,7 @@ body {
 
 /* Left Section - Cards */
 .left-section {
+  width: 50%;
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -50,19 +76,29 @@ body {
 }
 
 .activiry-categories {
+  gap: 20px;
   display: flex;
   justify-content: space-around;
 }
 
 .card {
-  background: white;
+  margin-top: 20px;
+  background: rgba(
+    255,
+    255,
+    255,
+    0.05
+  ); /* Малку посветол стаклен ефект за картичките */
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(12px);
   width: 100%;
   border-radius: 10px;
   padding: 25px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
   transition:
     transform 0.3s ease,
-    box-shadow 0.3s ease;
+    box-shadow 0.3s ease,
+    border-color 0.3s ease;
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -73,30 +109,47 @@ body {
 
 .card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 6px 25px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 0 20px rgba(0, 221, 235, 0.3);
+  border-color: #00ddeb; /* --neon */
 }
 
 .card h2 {
-  color: #667eea;
+  color: #00ddeb; /* --neon */
   margin-bottom: 12px;
   font-size: 1.5em;
 }
 
 .card p {
-  color: #666;
+  color: rgba(255, 255, 255, 0.75);
   font-size: 0.95em;
+}
+
+.right-section {
+  width: 40%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.header_map {
+  width: 100%;
+  height: 100%;
+  border-radius: 15px;
+  overflow: hidden;
 }
 
 /* Right Section - Content */
 .right-section h2 {
-  margin-bottom: 20px;
+  padding: 20px;
   font-size: 1.8rem;
+  color: white;
 }
 
 .right-section p {
   line-height: 1.6;
   font-size: 1.1rem;
-  color: #e0e0e0;
+  color: rgba(255, 255, 255, 0.85);
 }
 
 .stats-list {
@@ -107,15 +160,17 @@ body {
 
 .stats-list li {
   background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   margin-bottom: 12px;
   padding: 15px;
-  border-left: 4px solid #00d2ff;
+  border-left: 4px solid #00ddeb; /* --neon */
   border-radius: 8px;
   font-size: 1.05rem;
+  color: white;
 }
 
 .stats-list li strong {
-  color: #00d2ff;
+  color: #00ddeb; /* --neon */
   font-size: 1.25rem;
   margin-right: 5px;
 }
@@ -124,8 +179,8 @@ body {
   margin-top: 25px;
   padding: 15px;
   border-radius: 12px;
-  background: rgba(0, 210, 255, 0.1);
-  border: 1px dashed rgba(0, 210, 255, 0.3);
+  background: rgba(0, 221, 235, 0.12);
+  border: 1px dashed rgba(0, 221, 235, 0.4);
 }
 
 .users-count strong {
@@ -135,7 +190,8 @@ body {
 
 /* Footer */
 .footer {
-  background: #2c3e50;
+  background: rgba(255, 255, 255, 0.03);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
   padding: 30px 20px;
   text-align: center;
   margin-top: 40px;
@@ -152,11 +208,11 @@ body {
 }
 
 .sponsor {
-  color: white;
+  color: rgba(255, 255, 255, 0.65);
   font-size: 0.95em;
   font-weight: 500;
   padding: 8px 15px;
-  border-right: 1px solid rgba(255, 255, 255, 0.3);
+  border-right: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .sponsor:last-child {
@@ -174,28 +230,28 @@ body {
   position: relative;
   display: flex;
   align-items: center;
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.05);
   backdrop-filter: blur(12px);
-  border: 2px solid rgba(255, 255, 255, 0.2);
+  border: 2px solid rgba(255, 255, 255, 0.1);
   border-radius: 12px;
   padding: 8px 18px;
   transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   width: 320px;
   height: 50px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25);
 }
 
 .search-box:hover {
-  border-color: rgba(255, 255, 255, 0.5);
-  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.4);
+  background: rgba(255, 255, 255, 0.08);
 }
 
 .search-box:focus-within {
   width: 450px;
-  border-color: #00d2ff;
+  border-color: #00ddeb; /* --neon */
   box-shadow:
-    0 0 20px rgba(0, 242, 255, 0.4),
-    inset 0 0 10px rgba(0, 242, 255, 0.1);
+    0 0 20px rgba(0, 221, 235, 0.5),
+    inset 0 0 10px rgba(0, 221, 235, 0.2);
 }
 
 .search-input {
@@ -211,13 +267,13 @@ body {
 }
 
 .search-input::placeholder {
-  color: rgba(255, 255, 255, 0.7);
+  color: rgba(255, 255, 255, 0.55);
 }
 
 .search-btn {
   background: transparent;
   border: none;
-  color: #00d2ff;
+  color: #00ddeb; /* --neon */
   cursor: pointer;
   padding-left: 12px;
   display: flex;
@@ -229,13 +285,14 @@ body {
   transform: scale(1.3);
 }
 
-/* Popular Gyms Section - FIXED FOR ALIGNMENT */
+/* Popular Gyms Section */
 .popular-gyms {
   padding: 50px 20px;
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-  background-color: #f9f9f9;
+  font-family: "Inter", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #1a2333; /* Посветла темна нијанса за целосен континуитет */
   text-align: center;
   min-width: 700px;
+  min-height: 600px;
 }
 
 .popular-gyms-grid {
@@ -245,9 +302,9 @@ body {
 }
 
 .section-title {
-  font-size: 2rem;
+  font-size: 2 !important;
   margin-bottom: 30px;
-  color: #333;
+  color: white;
 }
 
 .gym-container {
@@ -259,13 +316,15 @@ body {
 }
 
 .gym-card {
-  background: #fff;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 15px;
   overflow: hidden;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease;
-
-  /* Овозможува сите картички да имаат иста висина во ред */
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25);
+  transition:
+    transform 0.3s ease,
+    border-color 0.3s ease,
+    box-shadow 0.3s ease;
   display: flex;
   flex-direction: column;
   width: 300px;
@@ -273,19 +332,20 @@ body {
 
 .gym-card:hover {
   transform: translateY(-5px);
+  border-color: #00ddeb; /* --neon */
+  box-shadow: 0 0 20px rgba(0, 221, 235, 0.3);
 }
 
 .gym-image img {
   width: 100%;
   height: 200px;
-  object-fit: cover; /* Спречува издолжување на сликите */
+  object-fit: cover;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .gym-info {
   padding: 20px;
   text-align: left;
-
-  /* Ова го прави инфо делот флексибилен за да го турне копчето долу */
   display: flex;
   flex-direction: column;
   flex-grow: 1;
@@ -293,19 +353,19 @@ body {
 
 .gym-info h3 {
   margin: 0 0 10px 0;
-  color: #222;
+  color: white;
   font-size: 1.25rem;
 }
 
 .rating {
   margin-bottom: 15px;
-  color: #ffb400;
-  /* Ова осигурува дека рејтингот и копчето секогаш ќе бидат на дното */
+  color: #f1c40f; /* Ѕвезди рејтинг */
+  filter: drop-shadow(0 0 2px rgba(241, 196, 15, 0.3));
   margin-top: auto;
 }
 
 .rating-text {
-  color: #777;
+  color: rgba(255, 255, 255, 0.55);
   font-size: 0.9rem;
   margin-left: 5px;
 }
@@ -313,18 +373,20 @@ body {
 .details-btn {
   width: 100%;
   padding: 12px;
-  background-color: #000;
-  color: #fff;
+  background-color: #00ddeb; /* --neon */
+  color: #1a2333; /* Контраст со новата позадина */
   border: none;
   border-radius: 8px;
   cursor: pointer;
   font-weight: 600;
-  transition: background 0.3s;
+  transition:
+    background-color 0.2s,
+    opacity 0.2s;
   margin-top: 10px;
 }
 
 .details-btn:hover {
-  background-color: #333;
+  opacity: 0.9;
 }
 
 /* Stats Balloons */
@@ -342,37 +404,41 @@ body {
 }
 
 .stat-card {
-  background: #ffffff;
-  border: 1px solid #e5e7eb;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 12px;
   padding: 15px 10px;
   text-align: center;
   transition: all 0.3s ease;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
 }
 
 .stat-card.wide {
-  background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+  background: linear-gradient(
+    135deg,
+    #1a2333 0%,
+    rgba(255, 255, 255, 0.03) 100%
+  );
   color: white;
-  border: none;
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .stat-card.wide .stat-number {
   font-size: 1.8rem;
-  color: #38bdf8;
+  color: #00ddeb; /* --neon */
 }
 
 .stat-card.wide .stat-label {
-  color: #94a3b8;
+  color: rgba(255, 255, 255, 0.65);
 }
 
 .stat-card.highlight {
-  background: #f0fdf4;
-  border-color: #bbf7d0;
+  background: rgba(0, 221, 235, 0.07);
+  border-color: rgba(0, 221, 235, 0.4);
 }
 
 .stat-card.highlight .stat-number {
-  color: #166534;
+  color: #00ddeb; /* --neon */
 }
 
 .stat-number {
@@ -381,7 +447,7 @@ body {
   font-weight: 800;
   line-height: 1;
   margin-bottom: 4px;
-  color: #111827;
+  color: white;
 }
 
 .stat-label {
@@ -389,13 +455,14 @@ body {
   font-size: 0.7rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  color: #6b7280;
+  color: rgba(255, 255, 255, 0.6);
   font-weight: 600;
 }
 
 .stat-card:hover {
   transform: translateY(-3px);
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+  border-color: rgba(255, 255, 255, 0.25);
 }
 
 /* Responsive Design */
@@ -403,10 +470,41 @@ body {
   .container {
     flex-direction: column;
     gap: 20px;
+    max-width: 768px;
+    min-width: 320px;
+  }
+  .left-section,
+  .right-section {
+    width: 100%;
+  }
+  
+  .header .header-left {
+    display: flex;
+    flex-direction: column !important;
+    text-align: center;
+    justify-content: center;
+  }
+  .welcome-search {
+    justify-content: center;
+    align-items: center;
   }
 
   .header h1 {
     font-size: 1.8em;
+  }
+  .right-section {
+    min-width: 360px;
+    min-height: 360px;
+    max-height: 360px;
+
+  }
+  .map-wrapper .leaflet-container .leaflet-touch .leaflet-retina .leaflet-safari .leaflet-fade-anim .leaflet-grab .leaflet-touch-drag .leaflet-touch-zoom{
+     min-width: 360px!important;
+    min-height: 360px!important;
+    max-height: 360px!important ;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 
   .sponsors {
@@ -416,7 +514,7 @@ body {
 
   .sponsor {
     border-right: none;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.15);
     padding: 10px 0;
     display: block;
   }
@@ -426,16 +524,14 @@ body {
   }
 
   .gym-card {
-    width: 100%; /* Картичките го заземаат целиот екран на мобилен */
+    width: 100%;
   }
 
   .search-box {
     width: 100%;
   }
 
-  .popular-gyms {
-    min-width: 100%;
-  }
+  
   .header {
     flex-direction: column;
     text-align: center;
@@ -457,6 +553,10 @@ body {
   .search-box:focus-within {
     transform: scale(0.8);
   }
+  main .container{
+    max-width: 768px;
+
+  }
 
   .stats-compact-container {
     flex-direction: row;
@@ -467,14 +567,17 @@ body {
   .card {
     flex-direction: column;
     min-height: 200px;
+    max-width: 110px;
   }
 
   .gym-container {
     width: 100%;
     justify-content: center;
+    gap: 20px!important ;
   }
   .gym-card {
     width: 100%;
+    margin: 10px;
     max-width: 400px;
   }
   .section-title {
@@ -482,5 +585,10 @@ body {
   }
   .map-wrapper {
     margin-top: 20px;
+  }
+  .popular-gyms {
+    justify-content: center;
+    align-items: center;
+    min-width: 370px !important;
   }
 }

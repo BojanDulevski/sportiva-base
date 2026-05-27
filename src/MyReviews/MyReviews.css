@@ -1,8 +1,13 @@
 :root {
   --neon-cyan: #00f3ff;
   --bg-dark: #0a0f18;
-  --card-bg: #161c28;
-  --text-primary: #ffffff;
+background: rgba(
+    255,
+    255,
+    255,
+    0.05
+  )!important;  /* За една нијанса посветла, помодерна темна позадина */
+    --text-primary: #ffffff;
   --text-secondary: #94a3b8;
   --border-color: #2d3748;
 }
@@ -135,8 +140,12 @@
 
 /* --- Card Styles --- */
 .activities-grid-my-reviews .activity-card {
-  background: var(--card-bg);
-  border: 1px solid var(--border-color);
+background: rgba(
+    255,
+    255,
+    255,
+    0.05
+  )!important;  border: 1px solid var(--border-color);
   border-radius: 16px;
   display: flex; /* Image left, content right */
   overflow: hidden;

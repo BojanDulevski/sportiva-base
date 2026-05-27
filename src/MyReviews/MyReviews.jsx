@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate, Link } from "react-router-dom";
 import "./MyReviews.css";
 
+
 export default function MyReviews({ activities }) {
   const [activityTypes, setActivityTypes] = useState([]);
   const [sortOption, setSortOption] = useState("");
@@ -96,17 +97,7 @@ export default function MyReviews({ activities }) {
                 Sports Halls
               </button>
             </div>
-            <div className="sort-box">
-              <span className="sort-label">Sort By</span>
-              <select
-                onChange={(e) => handleSortChange(e.target.value)}
-                className="sort-select"
-              >
-                <option value="">Select</option>
-                <option value="top_rated">Top Rated</option>
-                <option value="most_reviewed">Most Reviewed</option>
-              </select>
-            </div>
+            
           </header>
 
           <div className="activities-grid-my-reviews">

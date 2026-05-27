@@ -3,11 +3,18 @@
   justify-content: center;
   align-items: center;
   min-height: calc(100vh - 80px); 
-  background-color: #f8f9ff;
+  background-color: #1a2333; /* За една нијанса посветла, помодерна темна позадина */
+  color: #989898 !important;
+  height: calc(100vh - 64px);
 }
 
 .auth-card {
-  background: white;
+  background: rgba(
+    255,
+    255,
+    255,
+    0.05
+  );
   padding: 40px;
   border-radius: 15px;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
@@ -22,7 +29,7 @@
 }
 
 .auth-card p {
-  color: #666;
+  color: #989898 !important; /* --neon */
   font-size: 14px;
   margin-bottom: 30px;
 }
@@ -37,7 +44,7 @@
   font-size: 14px;
   font-weight: 600;
   margin-bottom: 5px;
-  color: #333;
+  color: #989898 !important; /* --neon */
 }
 
 .input-group input {
@@ -80,4 +87,10 @@
   color: #4a3aff;
   text-decoration: none;
   font-weight: bold;
+}
+@media (max-width: 480px) {
+  .auth-page {
+
+  height: calc(100vh - 70px);
+}
 }
