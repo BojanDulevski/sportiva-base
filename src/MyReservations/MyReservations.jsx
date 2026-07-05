@@ -1,4 +1,3 @@
-
 import SimpleMap from "../MapComponent/SimpleMap";
 import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate, Link } from "react-router-dom";
@@ -59,7 +58,7 @@ export default function MyReservations({ activities, reservations: initialReserv
     if (!selectedResId) return;
 
     try {
-      const response = await fetch(`http://127.0.0.1:8000/api/reservations/delete/${selectedResId}/`, {
+      const response = await fetch(`https://sportiva-base-django.onrender.com/api/reservations/delete/${selectedResId}/`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
