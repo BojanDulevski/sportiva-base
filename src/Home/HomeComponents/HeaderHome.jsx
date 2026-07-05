@@ -26,7 +26,7 @@ export default function HeaderHome({ activities }) {
   };
 
   useEffect(() => {
-    fetch("http://127.0.0.1:8000/api/users/")
+    fetch("https://sportiva-base-django.onrender.com/api/users/")
       .then((response) => response.json())
       .then((data) => setUsers(data.length))
       .catch((err) => console.error(err));
