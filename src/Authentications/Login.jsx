@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import './Signup.css';
 import { Link, useNavigate } from 'react-router-dom';
-
 function Login() {
   const [formData, setFormData] = useState({
     username: '',
@@ -14,18 +13,15 @@ function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
-
     try {
-      const response = await fetch('http://127.0.0.1:8000/api/login/', {
+      const response = await fetch('https://sportiva-base-django.onrender.com/api/login/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(formData),
       });
-
       const data = await response.json();
-
       if (response.ok) {
         localStorage.setItem('token', data.token);
         localStorage.setItem('username', data.username);
@@ -38,7 +34,6 @@ function Login() {
       setReviewError("Connection failed. Make sure your Django server is running.");
     }
   };
-
   return (
     <div className="auth-page">
       <div className="auth-card">
@@ -72,5 +67,4 @@ function Login() {
     </div>
   );
 }
-
 export default Login;
