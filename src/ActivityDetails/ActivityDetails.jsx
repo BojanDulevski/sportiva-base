@@ -96,7 +96,7 @@ const ActivityDetails = ({ activities }) => {
 
     const token = localStorage.getItem("token");
     try {
-      const response = await fetch("http://127.0.0.1:8000/api/review/", {
+      const response = await fetch("https://sportiva-base-django.onrender.com/api/review/", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -150,7 +150,7 @@ const ActivityDetails = ({ activities }) => {
 
     const token = localStorage.getItem("token");
     try {
-      const response = await fetch("http://127.0.0.1:8000/api/reservation/", {
+      const response = await fetch("https://sportiva-base-django.onrender.com/api/reservation/", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
