@@ -81,4 +81,4 @@ function Signup() {
     </div>
   );
 }
-export default Signup;
+export default SignUp;
