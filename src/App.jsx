@@ -9,29 +9,25 @@ import MyReviews from "./MyReviews/MyReviews";
 import MyReservations from "./MyReservations/MyReservations";
 import { Routes, Route } from "react-router";
 import React, { useState, useEffect } from "react";
-
 function App() {
   const [activities, setActivities] = useState([]);
   const [reservations, setReservations] = useState([]);
-
    useEffect(() => {
-    fetch("http://127.0.0.1:8000/api/reservations/")
+    fetch("https://sportiva-base-django.onrender.com/api/reservations/")
       .then((response) => response.json())
       .then((data) => {
         setReservations(data);
       })
       .catch((err) => console.error(err));
   }, []);
-
   useEffect(() => {
-    fetch("http://127.0.0.1:8000/api/activities/")
+    fetch("https://sportiva-base-django.onrender.com/api/activities/")
       .then((response) => response.json())
       .then((data) => {
         setActivities(data);
       })
       .catch((err) => console.error(err));
   }, []);
-
   return (
     <>
       <Navbar />
@@ -59,5 +55,4 @@ function App() {
     </>
   );
 }
-
 export default App;
