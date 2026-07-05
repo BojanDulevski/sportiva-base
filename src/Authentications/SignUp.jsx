@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import './Signup.css';
 import { Link, useNavigate } from 'react-router-dom';
-
-
 function Signup() {
   const [formData, setFormData] = useState({
     username: '',
@@ -14,27 +12,22 @@ function Signup() {
   const [reviewError, setReviewError] = useState("");
   
   const navigate = useNavigate();
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
-
     if (!formData.username || !formData.email || !formData.password) {
       setError('Please fill in all fields.');
       return;
     }
-
     try {
-      const response = await fetch('http://127.0.0.1:8000/api/register/', {
+      const response = await fetch('https://sportiva-base-django.onrender.com/api/register/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(formData),
       });
-
       const data = await response.json();
-
       if (response.ok) {
         navigate('/login');
       } else {
@@ -88,5 +81,4 @@ function Signup() {
     </div>
   );
 }
-
 export default Signup;
